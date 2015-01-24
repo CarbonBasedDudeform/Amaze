@@ -14,17 +14,20 @@ Game * Game::GetInstance()
 
 Game::Game()
 {
+	_window = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), GAME_TITLE);
+	_curGameState = new PlayingState();
 }
 
 
 Game::~Game()
 {
+	delete _window;
+	delete _curGameState;
 }
 
 bool Game::Init()
 {
-	_window = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), GAME_TITLE);
-	_curGameState = new PlayingState();
+	_curGameState->Init();
 	return true;
 }
 
