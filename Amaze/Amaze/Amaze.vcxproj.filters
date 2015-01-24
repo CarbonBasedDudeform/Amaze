@@ -19,6 +19,12 @@
     <Filter Include="Source Files\GameStates">
       <UniqueIdentifier>{7dc408c6-45db-428e-ba15-a9291c2286f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Gameplay">
+      <UniqueIdentifier>{4145770a-9d42-43d4-b59d-3e0e8e929dbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gameplay">
+      <UniqueIdentifier>{95c3a6ac-eabd-4fd8-8cb2-d5a0de47ee21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -42,6 +48,9 @@
     <ClCompile Include="PlayingState.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
+    <ClCompile Include="GridBlock.cpp">
+      <Filter>Source Files\Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -64,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="GameStates.h">
       <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="GridBlock.h">
+      <Filter>Header Files\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

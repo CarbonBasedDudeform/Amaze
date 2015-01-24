@@ -84,6 +84,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOverState.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GridBlock.cpp" />
     <ClCompile Include="LevelTransistionState.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuState.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="GameOverState.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStates.h" />
+    <ClInclude Include="GridBlock.h" />
     <ClInclude Include="LevelTransistionState.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="PlayingState.h" />

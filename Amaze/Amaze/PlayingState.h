@@ -1,6 +1,7 @@
 #pragma once
 #include "GameState.h"
-#include <list>
+#include "GridBlock.h"
+#include <deque>
 
 class PlayingState :
 	public GameState
@@ -10,8 +11,10 @@ public:
 	~PlayingState();
 	void Init() override;
 	void Render(sf::RenderWindow * window) override;
-	std::list<sf::RectangleShape *> * GenerateMaze(int size);
+	std::deque<GridBlock *> * GenerateMaze(int size);
 private:
-	std::list<sf::RectangleShape *> *  _walls;
+	std::deque<GridBlock *> *  _maze;
+	void CreateStartAndFinishLocations(GridLocation &, GridLocation &, int mazeSize);
+	int FindDistance(GridLocation &, GridLocation &);
 };
 
