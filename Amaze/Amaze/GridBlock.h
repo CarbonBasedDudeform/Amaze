@@ -45,5 +45,7 @@ private:
 
 	bool _IsStart;
 	bool _IsFinish;
+
+	void NoWalls();
 };
 

@@ -17,17 +17,17 @@ GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
 	//right wall stuff
 	_rightWall = new sf::RectangleShape(sf::Vector2f(GridBlock::WALL_WIDTH, GridBlock::WALL_LENGTH));
 	_rightWall->setFillColor(sf::Color::Red);
-	_rightWall->setPosition(sf::Vector2f(xOffset + X + (GridBlock::WALL_LENGTH / 2), yOffset + Y));
+	_rightWall->setPosition(sf::Vector2f(xOffset + X + (GridBlock::WALL_LENGTH / 2) - GridBlock::WALL_WIDTH, yOffset + Y));
 	_displayRight = true;
 	//top wall stuff
 	_topWall = new sf::RectangleShape(sf::Vector2f(GridBlock::WALL_LENGTH, GridBlock::WALL_WIDTH));
 	_topWall->setFillColor(sf::Color::Red);
-	_topWall->setPosition(sf::Vector2f(xOffset + X - (GridBlock::WALL_LENGTH / 2),yOffset + Y + (GridBlock::WALL_LENGTH - GridBlock::WALL_WIDTH)));
+	_topWall->setPosition(sf::Vector2f(xOffset + X - (GridBlock::WALL_LENGTH / 2), yOffset + Y + (GridBlock::WALL_LENGTH - GridBlock::WALL_WIDTH)));
 	_displayTop = true;
 	//bottom wall stuff
 	_bottomWall = new sf::RectangleShape(sf::Vector2f(GridBlock::WALL_LENGTH, GridBlock::WALL_WIDTH));
 	_bottomWall->setFillColor(sf::Color::Red);
-	_bottomWall->setPosition(sf::Vector2f(xOffset + X - (GridBlock::WALL_LENGTH / 2),yOffset + Y ));
+	_bottomWall->setPosition(sf::Vector2f(xOffset + X - (GridBlock::WALL_LENGTH / 2), yOffset + Y));
 	_displayBottom = true;
 
 	//default to neither start nor finish
@@ -50,6 +50,19 @@ void GridBlock::Render(sf::RenderWindow * window)
 	if (_displayRight) window->draw(*_rightWall);
 	if (_displayTop) window->draw(*_topWall);
 	if (_displayBottom) window->draw(*_bottomWall);
+
+	if (_IsStart) {
+		sf::CircleShape circle(10.0f);
+		circle.setFillColor(sf::Color::Green);
+		circle.setPosition(_xOffset + X, _yOffset + Y);
+		window->draw(circle);
+	}
+	if (_IsFinish) {
+		sf::CircleShape circle(10.0f);
+		circle.setFillColor(sf::Color::Yellow);
+		circle.setPosition(_xOffset + X, _yOffset + Y);
+		window->draw(circle);
+	}
 }
 
 void GridBlock::EnableLeft(bool val)
@@ -81,8 +94,14 @@ bool GridBlock::IsFinish() const {
 
 void GridBlock::MakeStart() {
 	_IsStart = true;
+	NoWalls();
 }
 
 void GridBlock::MakeFinish() {
 	_IsFinish = true;
+	NoWalls();
+}
+
+void GridBlock::NoWalls() {
+	_displayLeft = _displayRight = _displayTop = _displayBottom = false;
 }
