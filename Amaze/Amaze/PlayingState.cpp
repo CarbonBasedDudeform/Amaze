@@ -2,6 +2,8 @@
 
 PlayingState::PlayingState()
 {
+	//seed rand to make everything more unique for each playingstate
+	srand(time(NULL));
 }
 
 
@@ -11,41 +13,41 @@ PlayingState::~PlayingState()
 
 void PlayingState::Init() {
 	//Init code
-	_maze = GenerateMaze(10);
+	GenerateMaze(10);
 }
 
 //size is used to generate a maze of size by size dimension
-std::deque<GridBlock *> * PlayingState::GenerateMaze(int size) {
+void PlayingState::GenerateMaze(int size) {
 	_size = size; //private member other functions can access for the maze size, saves passing in repeatedly as an argument
 	//our return list containing all the walls
-	auto maze = new std::deque<GridBlock *>();
+	_maze = new std::deque<GridBlock *>();
 	//populate
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < size; ++j) {
-			maze->push_back(new GridBlock(i,j, GridBlock::WALL_LENGTH*i, GridBlock::WALL_LENGTH*j));
+			_maze->push_back(new GridBlock(i,j, GridBlock::WALL_LENGTH*i, GridBlock::WALL_LENGTH*j));
 		}
 	}
 
-	GridLocation start;
-	GridLocation finish;
-	CreateStartAndFinishLocations(start, finish);
+	_start = new GridLocation();
+	_finish = new GridLocation();
+	CreateStartAndFinishLocations(*_start, *_finish);
 	//cheeky little hack for multidimensional access, 
-	maze->at(start.Y+(start.X*size))->MakeStart();
-	maze->at(finish.Y + (finish.X*size))->MakeFinish();
+	_maze->at(_start->Y+(_start->X*size))->MakeStart();
+	_maze->at(_finish->Y + (_finish->X*size))->MakeFinish();
 
-	CreateRoute(start, finish, *maze);
-	return maze;
+	CreateRoute(*_start, *_finish);
+
+	//proceed to create 3 false routes from the start -- these lead the player to other deadends
+	CreateFauxRoutes(15);
+
 }
 
 //takes two GridLocations as input by reference and populates them with the (x,y) in the maze of their respective positions
 void PlayingState::CreateStartAndFinishLocations(GridLocation &start, GridLocation &finish)
 {
 	//now randomly select two chambers with sufficient distance to be the start and the end
-	srand(time(NULL));
 	//initialise everything to 0
 	start.X = start.Y = finish.Y = finish.X = 0;
-
-	const int MAX_ATTEMPTS = 10;
 
 	//try to find a satisfactory start and finish position
 	//satisfactory = distance between the two is >= MIN_DISTANCE
@@ -62,6 +64,68 @@ void PlayingState::CreateStartAndFinishLocations(GridLocation &start, GridLocati
 			break;
 		}
 	}
+}
+
+void PlayingState::CreateFauxRoutes(int amount) {
+	auto deadends = new std::deque<GridLocation *>();
+	//generate the given amount of routes
+	while (deadends->size() < amount) {
+		GridLocation * temp = CreateDeadend(*_start); //this should get refactored, complexity is growing, old code isn't being updated to reflect the changes
+		//deadends will be empty at first so just add the first generated value which meets contraints
+		if (deadends->size() < 1) {
+			deadends->push_back(temp);
+		}
+		else {
+			//make sure they are unique (ie. not the same as previously generated routes)
+			bool found = false;
+			for (int i = 0; i < deadends->size(); i++)
+			{
+				if (deadends->at(i)->X == temp->X && deadends->at(i)->Y == temp->Y)
+				{
+					//GridLocation is already a deadend
+					//start again
+					delete temp;
+					found = true;
+					break;
+				}
+			}
+			//gridlocation wasn't found so make sure it meets constraints
+			if (!found) {
+				if (MeetsConstraints(*temp, *_start))
+				{
+					//if everything is cool, add it to the list
+					deadends->push_back(temp);
+				}
+				else {
+					//otherwise scrap it and start again
+					delete temp;
+				}
+			}
+		}
+	}
+
+	//create routes
+	for (int i = 0; i < deadends->size(); i++)
+	{
+		CreateRoute(*_start, *deadends->at(i));
+	}
+}
+
+GridLocation * PlayingState::CreateDeadend(GridLocation & finish) {
+	GridLocation * temp = new GridLocation();
+	temp->X = temp->Y = 0;
+
+	for (int i = 0; i < MAX_ATTEMPTS; i++) {
+		temp->X = rand() % _size;
+		temp->Y = rand() % _size;
+
+		if (MeetsConstraints(*temp, finish)) {
+			//done
+			break;
+		}
+	}
+
+	return temp;
 }
 
 //Checks to see if the given locations meet the required constrains
@@ -83,49 +147,49 @@ int PlayingState::FindDistance(GridLocation & one, GridLocation & two){
 	return sqrt((xDifference*xDifference) + (yDifference*yDifference));
 }
 
-void PlayingState::CreateRoute(GridLocation & a, GridLocation & b, std::deque<GridBlock*> & maze)
+void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 {
 	//mister gorbachev, tear down theses wall!
 	if (a.X == b.X && a.Y == b.Y) return;
 
 	if (a.X < b.X) {
-		maze.at(a.Y + (a.X * 10))->EnableRight(false);
-		maze.at(a.Y + (a.X * 10))->EnableLeft(false);
+		_maze->at(a.Y + (a.X * 10))->EnableRight(false);
+		_maze->at(a.Y + (a.X * 10))->EnableLeft(false);
 
 		GridLocation temp;
 		temp.X = a.X + 1;
 		temp.Y = a.Y;
-		CreateRoute(temp, b, maze);
+		CreateRoute(temp, b);
 	}
 	else if (a.X > b.X) {
-		maze.at(a.Y + (a.X * 10))->EnableRight(false);
-		maze.at(a.Y + (a.X * 10))->EnableLeft(false);
+		_maze->at(a.Y + (a.X * 10))->EnableRight(false);
+		_maze->at(a.Y + (a.X * 10))->EnableLeft(false);
 		GridLocation temp;
 		temp.X = a.X - 1;
 		temp.Y = a.Y;
-		CreateRoute(temp, b, maze);
+		CreateRoute(temp, b);
 	}
 	else if (a.Y < b.Y) {
-		maze.at(a.Y + (a.X * 10))->EnableTop(false);
-		maze.at(a.Y + (a.X * 10))->EnableBottom(false);
+		_maze->at(a.Y + (a.X * 10))->EnableTop(false);
+		_maze->at(a.Y + (a.X * 10))->EnableBottom(false);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y + 1;
-		CreateRoute(temp, b, maze);
+		CreateRoute(temp, b);
 	}
 	else if (a.Y > b.Y)
 	{
-		maze.at(a.Y + (a.X * 10))->EnableTop(false);
-		maze.at(a.Y + (a.X * 10))->EnableBottom(false);
+		_maze->at(a.Y + (a.X * 10))->EnableTop(false);
+		_maze->at(a.Y + (a.X * 10))->EnableBottom(false);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y - 1;
-		CreateRoute(temp, b, maze);
+		CreateRoute(temp, b);
 	}
 
 	if (a.X == b.X) {
-		maze.at(a.Y + (a.X * 10))->EnableRight(false);
-		maze.at(a.Y + (a.X * 10))->EnableLeft(false);
+		_maze->at(a.Y + (a.X * 10))->EnableRight(false);
+		_maze->at(a.Y + (a.X * 10))->EnableLeft(false);
 	}
 }
 
