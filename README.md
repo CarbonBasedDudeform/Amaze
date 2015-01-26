@@ -1,5 +1,5 @@
 # Amaze
-Amaze is a maze game written in C++ using OpenGL and SFML.
+Amaze is a maze game written in C++ SFML.
 
 https://www.youtube.com/watch?v=rxZWdGOwLFI
 
