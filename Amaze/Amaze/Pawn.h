@@ -14,5 +14,10 @@ public:
 	float WorldX;
 	float WorldY;
 	virtual void Render(sf::RenderWindow * window) = 0;
+	float Size;
+protected:
+	sf::Texture * _texture;
+	sf::Sprite * _sprite;
+	float _offset;
 };
 

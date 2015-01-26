@@ -11,7 +11,7 @@ GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
 	Y = y;
 
 	WorldX = _xOffset + X;
-	WorldY = _yOffset + Y;
+	WorldY = _yOffset + Y + WALL_LENGTH/2;
 
 	//left wall stuff
 	_leftWall = new sf::RectangleShape(sf::Vector2f(GridBlock::WALL_WIDTH, GridBlock::WALL_LENGTH));

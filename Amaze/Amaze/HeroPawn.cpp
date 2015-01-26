@@ -5,6 +5,12 @@ HeroPawn::HeroPawn()
 {
 	WorldX = 0;
 	WorldY = 0;
+
+	_texture = new sf::Texture();
+	_texture->loadFromFile("Textures/hero.png");
+	Size = _texture->getSize().x;
+	_offset = Size / 2;
+	_sprite = new sf::Sprite(*_texture);
 }
 
 
@@ -14,8 +20,6 @@ HeroPawn::~HeroPawn()
 
 void HeroPawn::Render(sf::RenderWindow * window)
 {
-	sf::RectangleShape rect(sf::Vector2f(10.0f, 10.0f));
-	rect.setFillColor(sf::Color::Green);
-	rect.setPosition(WorldX, WorldY);
-	window->draw(rect);
+	_sprite->setPosition(WorldX-_offset, WorldY-_offset);
+	window->draw(*_sprite);
 }
