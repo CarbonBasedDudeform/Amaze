@@ -1,13 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "GameStates.h"
+#include "GameProperties.h"
 
 class Game
 {
 public:
 	~Game();
-	static const int SCREEN_WIDTH = 800;
-	static const int SCREEN_HEIGHT = 600;
 	static sf::String GAME_TITLE;
 
 	static Game * GetInstance();

@@ -13,5 +13,6 @@ public:
 	virtual ~GameState();
 	virtual void Init() = 0;
 	virtual void Render(sf::RenderWindow * window) = 0;
+	virtual void ProcessInput() = 0;
 };
 

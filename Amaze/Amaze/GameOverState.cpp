@@ -17,3 +17,7 @@ void GameOverState::Init() {
 void GameOverState::Render(sf::RenderWindow * window) {
 	//render code
 }
+
+void GameOverState::ProcessInput() {
+
+}

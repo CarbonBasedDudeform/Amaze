@@ -14,7 +14,7 @@ Game * Game::GetInstance()
 
 Game::Game()
 {
-	_window = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), GAME_TITLE);
+	_window = new sf::RenderWindow(sf::VideoMode(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT), GAME_TITLE);
 	_curGameState = new PlayingState();
 }
 
@@ -41,7 +41,9 @@ void Game::Loop()
 			if (event.type == sf::Event::Closed)
 				_window->close();
 		}
-
+		//check user input
+		_curGameState->ProcessInput();
+		//render
 		_window->clear();
 		_curGameState->Render(_window);
 		_window->display();

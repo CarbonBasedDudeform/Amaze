@@ -3,12 +3,15 @@
 PlayingState::PlayingState()
 {
 	//seed rand to make everything more unique for each playingstate
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
+	_hero = new HeroPawn();
 }
 
 
 PlayingState::~PlayingState()
 {
+	delete _hero;
+	delete _heroController;
 }
 
 void PlayingState::Init() {
@@ -31,9 +34,8 @@ void PlayingState::GenerateMaze(int size) {
 	_start = new GridLocation();
 	_finish = new GridLocation();
 	CreateStartAndFinishLocations(*_start, *_finish);
-	//cheeky little hack for multidimensional access, 
-	_maze->at(_start->Y+(_start->X*size))->MakeStart();
-	_maze->at(_finish->Y + (_finish->X*size))->MakeFinish();
+	CreateStart(_start->X, _start->Y);
+	CreateFinish(_finish->X, _finish->Y);
 
 	CreateRoute(*_start, *_finish);
 
@@ -66,7 +68,28 @@ void PlayingState::CreateStartAndFinishLocations(GridLocation &start, GridLocati
 	}
 }
 
-void PlayingState::CreateFauxRoutes(int amount) {
+void PlayingState::CreateStart(int x, int y)
+{
+	//mak = multidimension array hack, allows access to the deque in a way similar to accessing a 2d array
+	int mah = y + (x * _size);
+	auto cached = _maze->at(mah);
+	cached->MakeStart();
+	_hero->WorldX = cached->WorldX;
+	_hero->WorldY = cached->WorldY;
+
+	//:::::::::::::::IMPORTANT::::::::::::::: HeroController is created here so that the camera can be focused on the hero pawn correctly.
+	//										 aka, herocontroller needs to be created after the pawns WorldX and Y have been set
+	_heroController = new HeroController(_hero);
+}
+
+void PlayingState::CreateFinish(int x, int y)
+{
+	//mak = multidimension array hack
+	int mah = y + (x * _size);
+	_maze->at(mah)->MakeFinish();
+}
+
+void PlayingState::CreateFauxRoutes(unsigned int amount) {
 	auto deadends = new std::deque<GridLocation *>();
 	//generate the given amount of routes
 	while (deadends->size() < amount) {
@@ -78,7 +101,7 @@ void PlayingState::CreateFauxRoutes(int amount) {
 		else {
 			//make sure they are unique (ie. not the same as previously generated routes)
 			bool found = false;
-			for (int i = 0; i < deadends->size(); i++)
+			for (unsigned int i = 0; i < deadends->size(); i++)
 			{
 				if (deadends->at(i)->X == temp->X && deadends->at(i)->Y == temp->Y)
 				{
@@ -105,7 +128,7 @@ void PlayingState::CreateFauxRoutes(int amount) {
 	}
 
 	//create routes
-	for (int i = 0; i < deadends->size(); i++)
+	for (unsigned int i = 0; i < deadends->size(); i++)
 	{
 		CreateRoute(*_start, *deadends->at(i));
 	}
@@ -144,7 +167,7 @@ int PlayingState::FindDistance(GridLocation & one, GridLocation & two){
 	int xDifference = two.X - one.X;
 	int yDifference = two.Y - one.Y;
 			//a^2 + b^2 = c^2
-	return sqrt((xDifference*xDifference) + (yDifference*yDifference));
+	return (int)sqrt((xDifference*xDifference) + (yDifference*yDifference));
 }
 
 void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
@@ -194,9 +217,36 @@ void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 }
 
 void PlayingState::Render(sf::RenderWindow * window) {
+	//set the camera
+	window->setView(*_heroController->GetView());
+
 	//cycle through and render all the walls of the maze	
-	for (int i = 0; i < _maze->size(); i++)
+	for (unsigned int i = 0; i < _maze->size(); i++)
 	{
 		_maze->at(i)->Render(window);
+	}
+
+	_hero->Render(window);
+}
+
+void PlayingState::ProcessInput() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		_heroController->MoveLeft();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		_heroController->MoveRight();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	{
+		_heroController->MoveUp();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		_heroController->MoveDown();
 	}
 }

@@ -28,6 +28,8 @@ public:
 	bool IsFinish() const;
 	void MakeStart();
 	void MakeFinish();
+	float WorldX;
+	float WorldY;
 
 private:
 	int _xOffset;

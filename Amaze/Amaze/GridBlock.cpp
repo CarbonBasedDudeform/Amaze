@@ -9,6 +9,10 @@ GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
 	_yOffset = yOffset;
 	X = x;
 	Y = y;
+
+	WorldX = _xOffset + X;
+	WorldY = _yOffset + Y;
+
 	//left wall stuff
 	_leftWall = new sf::RectangleShape(sf::Vector2f(GridBlock::WALL_WIDTH, GridBlock::WALL_LENGTH));
 	_leftWall->setFillColor(sf::Color::Red);
@@ -50,19 +54,6 @@ void GridBlock::Render(sf::RenderWindow * window)
 	if (_displayRight) window->draw(*_rightWall);
 	if (_displayTop) window->draw(*_topWall);
 	if (_displayBottom) window->draw(*_bottomWall);
-
-	if (_IsStart) {
-		sf::CircleShape circle(10.0f);
-		circle.setFillColor(sf::Color::Green);
-		circle.setPosition(_xOffset + X, _yOffset + Y);
-		window->draw(circle);
-	}
-	if (_IsFinish) {
-		sf::CircleShape circle(10.0f);
-		circle.setFillColor(sf::Color::Yellow);
-		circle.setPosition(_xOffset + X, _yOffset + Y);
-		window->draw(circle);
-	}
 }
 
 void GridBlock::EnableLeft(bool val)

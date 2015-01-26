@@ -17,3 +17,7 @@ void LevelTransistionState::Init() {
 void LevelTransistionState::Render(sf::RenderWindow * window) {
 	//render code
 }
+
+void LevelTransistionState::ProcessInput() {
+
+}

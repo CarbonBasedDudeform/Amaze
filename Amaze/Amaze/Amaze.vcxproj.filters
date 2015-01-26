@@ -28,6 +28,18 @@
     <Filter Include="Header Files\Maths">
       <UniqueIdentifier>{f6a99cef-f5e2-4a0d-936d-498f818edf37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Gameplay\Pawns">
+      <UniqueIdentifier>{c8f966ea-19e0-4a3a-b859-58919a584e1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gameplay\Pawns">
+      <UniqueIdentifier>{c1b34160-799e-4eb3-9166-ce5e44839591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Gameplay\Controllers">
+      <UniqueIdentifier>{5ae80225-e108-4cd1-802d-d809f390e263}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Gameplay\Controllers">
+      <UniqueIdentifier>{80bd77fd-8d20-415e-99e2-82e8de261f60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -53,6 +65,24 @@
     </ClCompile>
     <ClCompile Include="GridBlock.cpp">
       <Filter>Source Files\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>Source Files\Gameplay\Pawns</Filter>
+    </ClCompile>
+    <ClCompile Include="HeroPawn.cpp">
+      <Filter>Source Files\Gameplay\Pawns</Filter>
+    </ClCompile>
+    <ClCompile Include="AIPawn.cpp">
+      <Filter>Source Files\Gameplay\Pawns</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Source Files\Gameplay\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="AIController.cpp">
+      <Filter>Source Files\Gameplay\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="HeroController.cpp">
+      <Filter>Source Files\Gameplay\Controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +112,27 @@
     </ClInclude>
     <ClInclude Include="Vector.h">
       <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Header Files\Gameplay\Pawns</Filter>
+    </ClInclude>
+    <ClInclude Include="HeroPawn.h">
+      <Filter>Header Files\Gameplay\Pawns</Filter>
+    </ClInclude>
+    <ClInclude Include="AIPawn.h">
+      <Filter>Header Files\Gameplay\Pawns</Filter>
+    </ClInclude>
+    <ClInclude Include="AIController.h">
+      <Filter>Header Files\Gameplay\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Header Files\Gameplay\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="HeroController.h">
+      <Filter>Header Files\Gameplay\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameProperties.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

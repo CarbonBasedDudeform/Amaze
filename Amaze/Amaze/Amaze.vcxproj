@@ -54,6 +54,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Graphics\OpenGL\SFML-2.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -81,23 +82,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIController.cpp" />
+    <ClCompile Include="AIPawn.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOverState.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GridBlock.cpp" />
+    <ClCompile Include="HeroController.cpp" />
+    <ClCompile Include="HeroPawn.cpp" />
     <ClCompile Include="LevelTransistionState.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="PlayingState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIController.h" />
+    <ClInclude Include="AIPawn.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameOverState.h" />
+    <ClInclude Include="GameProperties.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStates.h" />
     <ClInclude Include="GridBlock.h" />
+    <ClInclude Include="HeroController.h" />
+    <ClInclude Include="HeroPawn.h" />
     <ClInclude Include="LevelTransistionState.h" />
     <ClInclude Include="MenuState.h" />
+    <ClInclude Include="Pawn.h" />
     <ClInclude Include="PlayingState.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>

@@ -8,5 +8,6 @@ public:
 	~LevelTransistionState();
 	void Init() override;
 	void Render(sf::RenderWindow * window) override;
+	void ProcessInput() override;
 };
 

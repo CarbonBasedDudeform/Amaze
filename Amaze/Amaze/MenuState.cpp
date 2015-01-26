@@ -19,3 +19,7 @@ void MenuState::Render(sf::RenderWindow * window) {
 	shape.setFillColor(sf::Color::Green);
 	window->draw(shape);
 }
+
+void MenuState::ProcessInput() {
+
+}
