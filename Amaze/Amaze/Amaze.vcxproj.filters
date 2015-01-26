@@ -25,9 +25,6 @@
     <Filter Include="Source Files\Gameplay">
       <UniqueIdentifier>{95c3a6ac-eabd-4fd8-8cb2-d5a0de47ee21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Maths">
-      <UniqueIdentifier>{f6a99cef-f5e2-4a0d-936d-498f818edf37}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Gameplay\Pawns">
       <UniqueIdentifier>{c8f966ea-19e0-4a3a-b859-58919a584e1d}</UniqueIdentifier>
     </Filter>
@@ -109,9 +106,6 @@
     </ClInclude>
     <ClInclude Include="GridBlock.h">
       <Filter>Header Files\Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Header Files\Maths</Filter>
     </ClInclude>
     <ClInclude Include="Pawn.h">
       <Filter>Header Files\Gameplay\Pawns</Filter>

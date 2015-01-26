@@ -113,7 +113,6 @@
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="PlayingState.h" />
-    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
