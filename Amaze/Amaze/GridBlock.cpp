@@ -4,13 +4,15 @@ const int GridBlock::WALL_LENGTH;
 
 GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
 {
+	//Pawn Props
+	WorldX = xOffset + x + WALL_LENGTH / 2;
+	WorldY = yOffset + y + WALL_LENGTH / 2;
+	Size = WALL_LENGTH;
+
 	_xOffset = xOffset;
 	_yOffset = yOffset;
 	X = x;
 	Y = y;
-
-	WorldX = _xOffset + X;
-	WorldY = _yOffset + Y + WALL_LENGTH/2;
 
 	//left wall stuff
 	_block = new sf::RectangleShape(sf::Vector2f(GridBlock::WALL_LENGTH, GridBlock::WALL_LENGTH));
@@ -37,6 +39,10 @@ void GridBlock::Render(sf::RenderWindow * window)
 void GridBlock::Enable(bool val)
 {
 	_display = val;
+}
+
+bool GridBlock::IsEnabled() const {
+	return _display;
 }
 
 bool GridBlock::IsStart() const {

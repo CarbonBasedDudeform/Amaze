@@ -1,17 +1,9 @@
-﻿Build started 26/01/2015 10:23:09.
+﻿Build started 26/01/2015 12:09:23.
      1>Project "C:\Graphics\OpenGL\Amaze\Amaze\Amaze\Amaze.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Graphics\OpenGL\SFML-2.2\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp GridBlock.cpp HeroPawn.cpp Main.cpp PlayingState.cpp
-         Game.cpp
-         GridBlock.cpp
-     1>GridBlock.cpp(12): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>GridBlock.cpp(13): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>GridBlock.cpp(16): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
-     1>GridBlock.cpp(18): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-         HeroPawn.cpp
-     1>HeroPawn.cpp(12): warning C4244: '=' : conversion from 'unsigned int' to 'float', possible loss of data
-         Main.cpp
-         PlayingState.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Graphics\OpenGL\SFML-2.2\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt PhysicsSystem.cpp
+         PhysicsSystem.cpp
+     1>PhysicsSystem.cpp(24): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Graphics\OpenGL\Amaze\Amaze\Release\Amaze.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Graphics\OpenGL\SFML-2.2\lib" "sfml-graphics.lib" "sfml-window.lib" "sfml-system.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Graphics\OpenGL\Amaze\Amaze\Release\Amaze.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Graphics\OpenGL\Amaze\Amaze\Release\Amaze.lib" /MACHINE:X86 /SAFESEH Release\AIController.obj
          Release\AIPawn.obj
@@ -35,4 +27,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:08.52
+Time Elapsed 00:00:04.29

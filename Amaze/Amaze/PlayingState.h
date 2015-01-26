@@ -3,6 +3,7 @@
 #include "GridBlock.h"
 #include "HeroController.h"
 #include "HeroPawn.h"
+#include "PhysicsSystem.h"
 
 //stl
 #include <deque>
@@ -18,6 +19,7 @@ public:
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput() override;
 	void GenerateMaze(int size);
+
 private:
 	const int MAX_ATTEMPTS = 10; //max attempts at generating random values when creating routes
 
@@ -37,8 +39,11 @@ private:
 	void CreateStart(int, int);
 	void CreateFinish(int, int);
 
+	PhysicsSystem * _physics;
+
 	//The Hero (Thero)
 	HeroPawn * _hero;
 	HeroController * _heroController;
+
 };
 

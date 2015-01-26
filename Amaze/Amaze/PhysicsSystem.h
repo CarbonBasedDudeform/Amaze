@@ -7,6 +7,7 @@ public:
 	static PhysicsSystem * GetInstance();
 	~PhysicsSystem();
 	bool AreColliding(Pawn*, Pawn*);
+	float FindDistance(Pawn*, Pawn*);
 private:
 	static PhysicsSystem * _instance;
 	PhysicsSystem();

@@ -1,4 +1,5 @@
 #pragma once
+#include "Pawn.h"
 #include <SFML\Graphics.hpp>
 
 struct GridLocation {
@@ -6,7 +7,7 @@ struct GridLocation {
 	int Y;
 };
 
-class GridBlock
+class GridBlock : public Pawn
 {
 public:
 	static const int WALL_LENGTH = 50;
@@ -19,13 +20,12 @@ public:
 	void Render(sf::RenderWindow *);
 
 	void Enable(bool);
+	bool IsEnabled() const;
 
 	bool IsStart() const;
 	bool IsFinish() const;
 	void MakeStart();
 	void MakeFinish();
-	float WorldX;
-	float WorldY;
 
 private:
 	int _xOffset;

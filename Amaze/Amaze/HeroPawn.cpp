@@ -13,6 +13,10 @@ HeroPawn::HeroPawn()
 	_offset = Size / 2;
 	_sprite = new sf::Sprite(*_texture);
 #endif
+
+#ifdef _DEBUG 
+	Size = 10;
+#endif
 }
 
 
@@ -28,7 +32,7 @@ void HeroPawn::Render(sf::RenderWindow * window)
 #endif
 
 #if _DEBUG
-	sf::CircleShape circle(10.0f);
+	sf::CircleShape circle(Size);
 	circle.setFillColor(sf::Color::Green);
 	circle.setPosition(WorldX - _offset, WorldY - _offset);
 	window->draw(circle);

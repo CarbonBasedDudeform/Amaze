@@ -5,6 +5,7 @@ PlayingState::PlayingState()
 	//seed rand to make everything more unique for each playingstate
 	srand((unsigned int)time(NULL));
 	_hero = new HeroPawn();
+	_physics = PhysicsSystem::GetInstance();
 }
 
 
@@ -71,8 +72,8 @@ void PlayingState::CreateStartAndFinishLocations(GridLocation &start, GridLocati
 void PlayingState::CreateStart(int x, int y)
 {
 	//mak = multidimension array hack, allows access to the deque in a way similar to accessing a 2d array
-	int mah = y + (x * _size);
-	auto cached = _maze->at(mah);
+	int mak = y + (x * _size);
+	auto cached = _maze->at(mak);
 	cached->MakeStart();
 	_hero->WorldX = cached->WorldX;
 	_hero->WorldY = cached->WorldY;
@@ -225,23 +226,50 @@ void PlayingState::Render(sf::RenderWindow * window) {
 }
 
 void PlayingState::ProcessInput() {
+	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		_heroController->MoveLeft();
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		
+		for (unsigned int i = 0; i < _maze->size(); i++) {
+			auto colliding = _physics->AreColliding(_hero, _maze->at(i)) && _maze->at(i)->IsEnabled();
+			if (colliding) {
+				_heroController->MoveRight();
+				break;
+			}
+		}
+	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		_heroController->MoveRight();
-	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		for (unsigned int i = 0; i < _maze->size(); i++) {
+			auto colliding = _physics->AreColliding(_hero, _maze->at(i)) && _maze->at(i)->IsEnabled();
+			if (colliding) {
+				_heroController->MoveLeft();
+				break;
+			}
+		}
+	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		_heroController->MoveUp();
-	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		for (unsigned int i = 0; i < _maze->size(); i++) {
+			auto colliding = _physics->AreColliding(_hero, _maze->at(i)) && _maze->at(i)->IsEnabled();
+			if (colliding) {
+				_heroController->MoveDown();
+				break;
+			}
+		}
+	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		_heroController->MoveDown();
+
+		for (unsigned int i = 0; i < _maze->size(); i++) {
+			auto colliding = _physics->AreColliding(_hero, _maze->at(i)) && _maze->at(i)->IsEnabled();
+			if (colliding) {
+				_heroController->MoveUp();
+				break;
+			}
+		}
 	}
 }
