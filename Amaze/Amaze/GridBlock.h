@@ -10,7 +10,6 @@ class GridBlock
 {
 public:
 	static const int WALL_LENGTH = 50;
-	static const int WALL_WIDTH = 10;
 
 	GridBlock(int,int,int,int);
 	~GridBlock();
@@ -19,10 +18,7 @@ public:
 
 	void Render(sf::RenderWindow *);
 
-	void EnableLeft(bool);
-	void EnableRight(bool);
-	void EnableTop(bool);
-	void EnableBottom(bool);
+	void Enable(bool);
 
 	bool IsStart() const;
 	bool IsFinish() const;
@@ -35,19 +31,11 @@ private:
 	int _xOffset;
 	int _yOffset;
 
-	sf::RectangleShape * _leftWall;
-	sf::RectangleShape * _rightWall;
-	sf::RectangleShape * _topWall;
-	sf::RectangleShape * _bottomWall;
+	sf::RectangleShape * _block;
 
-	bool _displayLeft;
-	bool _displayRight;
-	bool _displayTop;
-	bool _displayBottom;
+	bool _display;
 
 	bool _IsStart;
 	bool _IsFinish;
-
-	void NoWalls();
 };
 

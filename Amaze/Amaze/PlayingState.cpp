@@ -176,8 +176,7 @@ void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 	if (a.X == b.X && a.Y == b.Y) return;
 
 	if (a.X < b.X) {
-		_maze->at(a.Y + (a.X * 10))->EnableRight(false);
-		_maze->at(a.Y + (a.X * 10))->EnableLeft(false);
+		_maze->at(a.Y + (a.X * 10))->Enable(false);
 
 		GridLocation temp;
 		temp.X = a.X + 1;
@@ -185,16 +184,14 @@ void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 		CreateRoute(temp, b);
 	}
 	else if (a.X > b.X) {
-		_maze->at(a.Y + (a.X * 10))->EnableRight(false);
-		_maze->at(a.Y + (a.X * 10))->EnableLeft(false);
+		_maze->at(a.Y + (a.X * 10))->Enable(false);
 		GridLocation temp;
 		temp.X = a.X - 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
 	}
 	else if (a.Y < b.Y) {
-		_maze->at(a.Y + (a.X * 10))->EnableTop(false);
-		_maze->at(a.Y + (a.X * 10))->EnableBottom(false);
+		_maze->at(a.Y + (a.X * 10))->Enable(false);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y + 1;
@@ -202,8 +199,7 @@ void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 	}
 	else if (a.Y > b.Y)
 	{
-		_maze->at(a.Y + (a.X * 10))->EnableTop(false);
-		_maze->at(a.Y + (a.X * 10))->EnableBottom(false);
+		_maze->at(a.Y + (a.X * 10))->Enable(false);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y - 1;
@@ -211,8 +207,7 @@ void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 	}
 
 	if (a.X == b.X) {
-		_maze->at(a.Y + (a.X * 10))->EnableRight(false);
-		_maze->at(a.Y + (a.X * 10))->EnableLeft(false);
+		_maze->at(a.Y + (a.X * 10))->Enable(false);
 	}
 }
 
