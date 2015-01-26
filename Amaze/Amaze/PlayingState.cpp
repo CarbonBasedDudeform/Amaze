@@ -226,50 +226,48 @@ void PlayingState::Render(sf::RenderWindow * window) {
 }
 
 void PlayingState::ProcessInput() {
-	
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	bool leftBlocked = false;
+	bool rightBlocked = false;
+	bool topBlocked = false;
+	bool bottomBlocked = false;
+
+	for (int i = 0; i < _maze->size(); i++)
+	{
+		if (_physics->AreColliding(_hero->WorldX-1, _hero->WorldY, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())
+		{
+			leftBlocked = true;
+		}
+
+		if (_physics->AreColliding(_hero->WorldX + 1, _hero->WorldY, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())
+		{
+			rightBlocked = true;
+		}
+
+		if (_physics->AreColliding(_hero->WorldX, _hero->WorldY - 1, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())
+		{
+			topBlocked = true;
+		}
+
+		if (_physics->AreColliding(_hero->WorldX, _hero->WorldY + 1, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())
+		{
+			bottomBlocked = true;
+		}
+	}
+
+	if (!leftBlocked && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		_heroController->MoveLeft();
-		
-		for (unsigned int i = 0; i < _maze->size(); i++) {
-			auto colliding = _physics->AreColliding(_hero, _maze->at(i)) && _maze->at(i)->IsEnabled();
-			if (colliding) {
-				_heroController->MoveRight();
-				break;
-			}
-		}
-	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	}
+	if (!rightBlocked && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		_heroController->MoveRight();
-
-		for (unsigned int i = 0; i < _maze->size(); i++) {
-			auto colliding = _physics->AreColliding(_hero, _maze->at(i)) && _maze->at(i)->IsEnabled();
-			if (colliding) {
-				_heroController->MoveLeft();
-				break;
-			}
-		}
-	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	}
+	if (!topBlocked && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		_heroController->MoveUp();
-
-		for (unsigned int i = 0; i < _maze->size(); i++) {
-			auto colliding = _physics->AreColliding(_hero, _maze->at(i)) && _maze->at(i)->IsEnabled();
-			if (colliding) {
-				_heroController->MoveDown();
-				break;
-			}
-		}
-	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	} 
+	if (!bottomBlocked && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		_heroController->MoveDown();
-
-		for (unsigned int i = 0; i < _maze->size(); i++) {
-			auto colliding = _physics->AreColliding(_hero, _maze->at(i)) && _maze->at(i)->IsEnabled();
-			if (colliding) {
-				_heroController->MoveUp();
-				break;
-			}
-		}
 	}
 }

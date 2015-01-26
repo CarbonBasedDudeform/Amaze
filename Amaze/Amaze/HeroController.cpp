@@ -3,7 +3,7 @@
 HeroController::HeroController(HeroPawn * pawn) : Controller(), _pawn(pawn)
 {
 	_view = new sf::View(sf::Vector2f(_pawn->WorldX, _pawn->WorldY), sf::Vector2f(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT));
-	_speed = 1.0f;
+	_speed = 0.4f;
 }
 
 
