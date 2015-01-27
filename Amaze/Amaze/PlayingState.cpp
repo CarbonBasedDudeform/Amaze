@@ -17,9 +17,13 @@ PlayingState::~PlayingState()
 
 void PlayingState::Init() {
 	//Init code
-	GenerateMaze(10);
+	GenerateMaze(20);
 }
 
+GridBlock * PlayingState::MultiHack(int x, int y)
+{
+	return _maze->at(y + (x * _size));
+}
 //size is used to generate a maze of size by size dimension
 void PlayingState::GenerateMaze(int size) {
 	_size = size; //private member other functions can access for the maze size, saves passing in repeatedly as an argument
@@ -41,7 +45,7 @@ void PlayingState::GenerateMaze(int size) {
 	CreateRoute(*_start, *_finish);
 
 	//proceed to create 3 false routes from the start -- these lead the player to other deadends
-	CreateFauxRoutes(_size/4);
+	CreateFauxRoutes(_size/2);
 	
 	//clean up - get rid of unrendered blocks
 	CleanUp();
@@ -74,8 +78,7 @@ void PlayingState::CreateStartAndFinishLocations(GridLocation &start, GridLocati
 void PlayingState::CreateStart(int x, int y)
 {
 	//mak = multidimension array hack, allows access to the deque in a way similar to accessing a 2d array
-	int mak = y + (x * _size);
-	auto cached = _maze->at(mak);
+	auto cached = MultiHack(x, y);
 	cached->MakeStart();
 	_hero->WorldX = cached->WorldX;
 	_hero->WorldY = cached->WorldY;
@@ -88,8 +91,7 @@ void PlayingState::CreateStart(int x, int y)
 void PlayingState::CreateFinish(int x, int y)
 {
 	//mak = multidimension array hack
-	int mah = y + (x * _size);
-	_maze->at(mah)->MakeFinish();
+	MultiHack(x,y)->MakeFinish();
 }
 
 void PlayingState::CreateFauxRoutes(unsigned int amount) {
@@ -172,32 +174,36 @@ int PlayingState::FindDistance(GridLocation & one, GridLocation & two){
 			//a^2 + b^2 = c^2
 	return (int)sqrt((xDifference*xDifference) + (yDifference*yDifference));
 }
-void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
+
+#include <iostream>
+void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 {
 	//mister gorbachev, tear down theses wall!
 	if (a.X == b.X && a.Y == b.Y) return;
+	if (a.X > _size) a.X = 0;
+	if (a.Y > _size) a.Y = 0;
 
-	if (a.X < b.X) {
-		_maze->at(a.Y + (a.X * 10))->Enable(false);
+	if (a.X < b.X ) {
+		MultiHack(a.X, a.Y)->Enable(false);
 		GridLocation temp;
 		temp.X = a.X + 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
 	} else if (a.X > b.X) {
-		_maze->at(a.Y + (a.X * 10))->Enable(false);
+		MultiHack(a.X, a.Y)->Enable(false);
 		GridLocation temp;
 		temp.X = a.X - 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
 	}else if (a.Y < b.Y) {
-		_maze->at(a.Y + (a.X * 10))->Enable(false);
+		MultiHack(a.X, a.Y)->Enable(false);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y + 1;
 		CreateRoute(temp, b);
 	} else if (a.Y > b.Y)
 	{
-		_maze->at(a.Y + (a.X * 10))->Enable(false);
+		MultiHack(a.X, a.Y)->Enable(false);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y - 1;
