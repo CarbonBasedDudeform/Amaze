@@ -6,6 +6,13 @@ PlayingState::PlayingState()
 	srand((unsigned int)time(NULL));
 	_hero = new HeroPawn();
 	_physics = PhysicsSystem::GetInstance();
+
+	_terrors = new std::vector<AIPawn *>();
+	_terrors->push_back(new AIPawn());
+	_terrors->push_back(new AIPawn());
+
+	_terrorsController = new AIController(_terrors);
+	_placedAI = 0;
 }
 
 
@@ -153,6 +160,18 @@ GridLocation * PlayingState::CreateDeadend(GridLocation & finish) {
 		}
 	}
 
+	auto cached = MultiHack(temp->X, temp->Y);
+	//make the deadend empty
+	cached->Enable(false);
+
+	//place the AIs (the terrors) at the deadends
+	if (_placedAI != _terrors->size())
+	{
+		_terrors->at(_placedAI)->WorldX = cached->WorldX;
+		_terrors->at(_placedAI)->WorldY = cached->WorldY;
+		_placedAI++;
+	}
+
 	return temp;
 }
 
@@ -228,12 +247,17 @@ void PlayingState::Render(sf::RenderWindow * window) {
 	window->setView(*_heroController->GetView());
 
 	//cycle through and render all the walls of the maze	
-	for (int i = 0; i < _maze->size(); i++)
+	for (auto iter = _maze->begin(); iter != _maze->end(); iter++)
 	{
-		_maze->at(i)->Render(window);
+		(*iter)->Render(window);
 	}
 
 	_hero->Render(window);
+
+	for (auto iter = _terrors->begin(); iter != _terrors->end(); iter++)
+	{
+		(*iter)->Render(window);
+	}
 }
 
 void PlayingState::ProcessInput() {
@@ -282,4 +306,6 @@ void PlayingState::ProcessInput() {
 	{
 		_heroController->MoveDown();
 	}
+
+	_terrorsController->Think();
 }

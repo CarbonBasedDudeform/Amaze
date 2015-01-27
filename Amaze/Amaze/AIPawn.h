@@ -6,5 +6,6 @@ class AIPawn :
 public:
 	AIPawn();
 	~AIPawn();
+	void Render(sf::RenderWindow *);
 };
 

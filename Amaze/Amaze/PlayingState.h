@@ -1,8 +1,13 @@
 #pragma once
 #include "GameState.h"
 #include "GridBlock.h"
+
 #include "HeroController.h"
 #include "HeroPawn.h"
+
+#include "AIController.h"
+#include "AIPawn.h"
+
 #include "PhysicsSystem.h"
 
 //stl
@@ -45,6 +50,11 @@ private:
 	//The Hero (Thero)
 	HeroPawn * _hero;
 	HeroController * _heroController;
+
+	//The Terrors (The T errors)
+	std::vector<AIPawn *> * _terrors;
+	AIController * _terrorsController;
+	int _placedAI;
 
 };
 
