@@ -24,11 +24,11 @@ void PlayingState::Init() {
 void PlayingState::GenerateMaze(int size) {
 	_size = size; //private member other functions can access for the maze size, saves passing in repeatedly as an argument
 	//our return list containing all the walls
-	_maze = new std::deque<GridBlock *>();
+	_maze = new std::vector<GridBlock *>();
 	//populate
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < size; ++j) {
-			_maze->push_back(new GridBlock(i,j, GridBlock::WALL_LENGTH*i, GridBlock::WALL_LENGTH*j));
+			_maze->push_back(new GridBlock(j,i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i));
 		}
 	}
 
@@ -41,8 +41,10 @@ void PlayingState::GenerateMaze(int size) {
 	CreateRoute(*_start, *_finish);
 
 	//proceed to create 3 false routes from the start -- these lead the player to other deadends
-	CreateFauxRoutes(15);
-
+	CreateFauxRoutes(_size/4);
+	
+	//clean up - get rid of unrendered blocks
+	CleanUp();
 }
 
 //takes two GridLocations as input by reference and populates them with the (x,y) in the maze of their respective positions
@@ -91,7 +93,7 @@ void PlayingState::CreateFinish(int x, int y)
 }
 
 void PlayingState::CreateFauxRoutes(unsigned int amount) {
-	auto deadends = new std::deque<GridLocation *>();
+	auto deadends = new std::vector<GridLocation *>();
 	//generate the given amount of routes
 	while (deadends->size() < amount) {
 		GridLocation * temp = CreateDeadend(*_start); //this should get refactored, complexity is growing, old code isn't being updated to reflect the changes
@@ -170,7 +172,6 @@ int PlayingState::FindDistance(GridLocation & one, GridLocation & two){
 			//a^2 + b^2 = c^2
 	return (int)sqrt((xDifference*xDifference) + (yDifference*yDifference));
 }
-
 void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 {
 	//mister gorbachev, tear down theses wall!
@@ -178,27 +179,23 @@ void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 
 	if (a.X < b.X) {
 		_maze->at(a.Y + (a.X * 10))->Enable(false);
-
 		GridLocation temp;
 		temp.X = a.X + 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
-	}
-	else if (a.X > b.X) {
+	} else if (a.X > b.X) {
 		_maze->at(a.Y + (a.X * 10))->Enable(false);
 		GridLocation temp;
 		temp.X = a.X - 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
-	}
-	else if (a.Y < b.Y) {
+	}else if (a.Y < b.Y) {
 		_maze->at(a.Y + (a.X * 10))->Enable(false);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y + 1;
 		CreateRoute(temp, b);
-	}
-	else if (a.Y > b.Y)
+	} else if (a.Y > b.Y)
 	{
 		_maze->at(a.Y + (a.X * 10))->Enable(false);
 		GridLocation temp;
@@ -206,9 +203,17 @@ void PlayingState::CreateRoute(GridLocation & a, GridLocation & b)
 		temp.Y = a.Y - 1;
 		CreateRoute(temp, b);
 	}
+}
 
-	if (a.X == b.X) {
-		_maze->at(a.Y + (a.X * 10))->Enable(false);
+void PlayingState::CleanUp()
+{
+	for (int i = 0; i < _maze->size(); i++)
+	{
+		if (!_maze->at(i)->IsEnabled() && !_maze->at(i)->IsStart() && !_maze->at(i)->IsFinish())
+		{
+			delete _maze->at(i);
+			_maze->erase(_maze->begin() + i);
+		}
 	}
 }
 
@@ -217,7 +222,7 @@ void PlayingState::Render(sf::RenderWindow * window) {
 	window->setView(*_heroController->GetView());
 
 	//cycle through and render all the walls of the maze	
-	for (unsigned int i = 0; i < _maze->size(); i++)
+	for (int i = 0; i < _maze->size(); i++)
 	{
 		_maze->at(i)->Render(window);
 	}
@@ -231,6 +236,7 @@ void PlayingState::ProcessInput() {
 	bool topBlocked = false;
 	bool bottomBlocked = false;
 
+	#pragma omp parallel for
 	for (int i = 0; i < _maze->size(); i++)
 	{
 		if (_physics->AreColliding(_hero->WorldX-1, _hero->WorldY, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())

@@ -6,7 +6,7 @@
 #include "PhysicsSystem.h"
 
 //stl
-#include <deque>
+#include <vector>
 
 
 class PlayingState :
@@ -21,11 +21,11 @@ public:
 	void GenerateMaze(int size);
 
 private:
-	const int MAX_ATTEMPTS = 10; //max attempts at generating random values when creating routes
+	const int MAX_ATTEMPTS = 50; //max attempts at generating random values when creating routes
 
 	//THE MAZE
 	int _size;
-	std::deque<GridBlock *> *  _maze;
+	std::vector<GridBlock *> *  _maze;
 	GridLocation * _start;
 	GridLocation * _finish;
 
@@ -35,6 +35,7 @@ private:
 	bool MeetsConstraints(GridLocation &, GridLocation &);
 	int FindDistance(GridLocation &, GridLocation &);
 	void CreateRoute(GridLocation &, GridLocation &);
+	void CleanUp();
 
 	void CreateStart(int, int);
 	void CreateFinish(int, int);
