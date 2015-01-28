@@ -26,6 +26,7 @@ public:
 	bool IsFinish() const;
 	void MakeStart();
 	void MakeFinish();
+	void IsCollidable();
 
 private:
 	int _xOffset;

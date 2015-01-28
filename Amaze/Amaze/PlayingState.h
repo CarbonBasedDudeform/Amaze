@@ -40,6 +40,7 @@ private:
 	bool MeetsConstraints(GridLocation &, GridLocation &);
 	int FindDistance(GridLocation &, GridLocation &);
 	void CreateRoute(GridLocation, GridLocation);
+	void DetectCollidibles(GridBlock &);
 	void CleanUp();
 
 	void CreateStart(int, int);

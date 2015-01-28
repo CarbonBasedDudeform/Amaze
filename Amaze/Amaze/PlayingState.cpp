@@ -29,8 +29,12 @@ void PlayingState::Init() {
 
 GridBlock * PlayingState::MultiHack(int x, int y)
 {
-	return _maze->at(y + (x * _size));
+	if ((x + (y * _size)) >= (_size*_size)) return nullptr;
+	if ((x + (y*_size)) < 0) return nullptr;
+
+	return _maze->at(x + (y * _size));
 }
+
 //size is used to generate a maze of size by size dimension
 void PlayingState::GenerateMaze(int size) {
 	_size = size; //private member other functions can access for the maze size, saves passing in repeatedly as an argument
@@ -48,10 +52,9 @@ void PlayingState::GenerateMaze(int size) {
 	CreateStartAndFinishLocations(*_start, *_finish);
 	CreateStart(_start->X, _start->Y);
 	CreateFinish(_finish->X, _finish->Y);
-
 	CreateRoute(*_start, *_finish);
 
-	//proceed to create 3 false routes from the start -- these lead the player to other deadends
+	//proceed to create false routes from the start -- these lead the player to other deadends
 	CreateFauxRoutes(_size/2);
 	
 	//clean up - get rid of unrendered blocks
@@ -194,11 +197,12 @@ int PlayingState::FindDistance(GridLocation & one, GridLocation & two){
 	return (int)sqrt((xDifference*xDifference) + (yDifference*yDifference));
 }
 
-#include <iostream>
 void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 {
 	//mister gorbachev, tear down theses wall!
 	if (a.X == b.X && a.Y == b.Y) return;
+
+	//wrap around.
 	if (a.X > _size) a.X = 0;
 	if (a.Y > _size) a.Y = 0;
 
@@ -230,15 +234,54 @@ void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 	}
 }
 
+void PlayingState::DetectCollidibles(GridBlock & a) {
+	auto xplus1 = MultiHack(a.X + 1, a.Y);
+	if (xplus1 != nullptr && !xplus1->IsStart()) {
+		_physics->AddCollidable(xplus1);
+		xplus1->IsCollidable();
+	}
+	auto xminus1 = MultiHack(a.X - 1, a.Y);
+	if (xminus1 != nullptr && !xminus1->IsStart()) {
+		_physics->AddCollidable(xminus1);
+		xminus1->IsCollidable();
+	}
+	auto yplus1 = MultiHack(a.X, a.Y + 1);
+	if (yplus1 != nullptr && !yplus1->IsStart()) {
+		_physics->AddCollidable(yplus1);
+		yplus1->IsCollidable();
+	}
+	auto yminus1 = MultiHack(a.X, a.Y - 1);
+	if (yminus1 != nullptr && !yminus1->IsStart()){
+		_physics->AddCollidable(yminus1);
+		yminus1->IsCollidable();
+	}
+
+}
+
 void PlayingState::CleanUp()
 {
+	//identify the indices of parts of the maze which can be removed (because they are not displayed and not the start or finish)
+	std::vector<int> indices;
 	for (int i = 0; i < _maze->size(); i++)
 	{
 		if (!_maze->at(i)->IsEnabled() && !_maze->at(i)->IsStart() && !_maze->at(i)->IsFinish())
 		{
-			delete _maze->at(i);
-			_maze->erase(_maze->begin() + i);
+			DetectCollidibles(*_maze->at(i));
+			_physics->CleanUp(_maze->at(i));
+			indices.push_back(i);
 		}
+	}
+
+	//remove the parts of the maze here because if it is done above then the size of maze decreases with each removal and elements get
+	//reshuffled causing problems with using the multidimenional access hack.
+	for (int i = 0; i < indices.size(); i++)
+	{
+		//with each pass through the loop something is removed
+		//because the indices is order from lowest to highest (ie. in the order 10, 15, 205, 6000) then you can assume
+		//that each removal moves the indices down by one. thus after N removals, the indices will have moved down by N.
+		//making the previous list, with 10 and 15 removed, become: 203, 5998
+		delete _maze->at((indices.at(i) - i));
+		_maze->erase(_maze->begin() + (indices.at(i) - i));
 	}
 }
 
@@ -266,43 +309,21 @@ void PlayingState::ProcessInput() {
 	bool topBlocked = false;
 	bool bottomBlocked = false;
 
-	#pragma omp parallel for
-	for (int i = 0; i < _maze->size(); i++)
-	{
-		if (_physics->AreColliding(_hero->WorldX-1, _hero->WorldY, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())
-		{
-			leftBlocked = true;
-		}
+	auto blocked = _physics->IsColliding(_hero);
 
-		if (_physics->AreColliding(_hero->WorldX + 1, _hero->WorldY, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())
-		{
-			rightBlocked = true;
-		}
-
-		if (_physics->AreColliding(_hero->WorldX, _hero->WorldY - 1, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())
-		{
-			topBlocked = true;
-		}
-
-		if (_physics->AreColliding(_hero->WorldX, _hero->WorldY + 1, _hero->Size, _maze->at(i)) && _maze->at(i)->IsEnabled())
-		{
-			bottomBlocked = true;
-		}
-	}
-
-	if (!leftBlocked && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (!blocked.Left && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		_heroController->MoveLeft();
 	}
-	if (!rightBlocked && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (!blocked.Right && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		_heroController->MoveRight();
 	}
-	if (!topBlocked && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	if (!blocked.Up && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		_heroController->MoveUp();
 	} 
-	if (!bottomBlocked && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	if (!blocked.Down && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		_heroController->MoveDown();
 	}

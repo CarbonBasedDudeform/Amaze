@@ -33,7 +33,7 @@ GridBlock::~GridBlock()
 
 void GridBlock::Render(sf::RenderWindow * window)
 {
-	if (_display || _IsFinish || _IsStart) window->draw(*_block);
+	if (_display || _IsFinish || _IsStart) 	window->draw(*_block);
 }
 
 void GridBlock::Enable(bool val)
@@ -65,4 +65,10 @@ void GridBlock::MakeFinish() {
 	_display = false;
 
 	_block->setFillColor(sf::Color::Magenta);
+}
+
+
+
+void GridBlock::IsCollidable() {
+	_block->setFillColor(sf::Color::White);
 }
