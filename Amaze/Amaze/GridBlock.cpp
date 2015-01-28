@@ -5,8 +5,8 @@ const int GridBlock::WALL_LENGTH;
 GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
 {
 	//Pawn Props
-	WorldX = xOffset + x + WALL_LENGTH / 2;
-	WorldY = yOffset + y + WALL_LENGTH / 2;
+	WorldX = xOffset + WALL_LENGTH / 2;
+	WorldY = yOffset + WALL_LENGTH / 2;
 	Size = WALL_LENGTH;
 
 	_xOffset = xOffset;
