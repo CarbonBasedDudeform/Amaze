@@ -235,27 +235,97 @@ void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 }
 
 void PlayingState::DetectCollidibles(GridBlock & a) {
+	// _____________
+	// |___|___|___|
+	// |___|_a_|_#_|
+	// |___|___|___|
+	//right
 	auto xplus1 = MultiHack(a.X + 1, a.Y);
 	if (xplus1 != nullptr && !xplus1->IsStart()) {
 		_physics->AddCollidable(xplus1);
 		xplus1->IsCollidable();
 	}
+
+	// _____________
+	// |___|___|___|
+	// |_#_|_a_|___|
+	// |___|___|___|
+	//left
 	auto xminus1 = MultiHack(a.X - 1, a.Y);
 	if (xminus1 != nullptr && !xminus1->IsStart()) {
 		_physics->AddCollidable(xminus1);
 		xminus1->IsCollidable();
 	}
+
+	// _____________
+	// |___|_#_|___|
+	// |___|_a_|___|
+	// |___|___|___|
+	//up
 	auto yplus1 = MultiHack(a.X, a.Y + 1);
 	if (yplus1 != nullptr && !yplus1->IsStart()) {
 		_physics->AddCollidable(yplus1);
 		yplus1->IsCollidable();
 	}
+
+	// _____________
+	// |___|___|___|
+	// |___|_a_|___|
+	// |___|_#_|___|
+	//down
 	auto yminus1 = MultiHack(a.X, a.Y - 1);
 	if (yminus1 != nullptr && !yminus1->IsStart()){
 		_physics->AddCollidable(yminus1);
 		yminus1->IsCollidable();
 	}
 
+	// _____________
+	// |_#_|___|___|
+	// |___|_a_|___|
+	// |___|___|___|
+	//up and left
+	auto upleft = MultiHack(a.X - 1, a.Y + 1);
+	if (upleft != nullptr && !upleft->IsStart())
+	{
+		_physics->AddCollidable(upleft);
+		upleft->IsCollidable();
+	}
+
+	// _____________
+	// |___|___|_#_|
+	// |___|_a_|___|
+	// |___|___|___|
+	//up and right
+	auto upright = MultiHack(a.X + 1, a.Y + 1);
+	if (upright != nullptr && !upright->IsStart())
+	{
+		_physics->AddCollidable(upright);
+		upright->IsCollidable();
+	}
+
+	// _____________
+	// |___|___|___|
+	// |___|_a_|___|
+	// |___|___|_#_|
+	//down and right
+	auto downright = MultiHack(a.X + 1, a.Y - 1);
+	if (downright != nullptr && !downright->IsStart())
+	{
+		_physics->AddCollidable(downright);
+		downright->IsCollidable();
+	}
+
+	// _____________
+	// |___|___|___|
+	// |___|_a_|___|
+	// |_#_|___|___|
+	//down and left
+	auto downleft = MultiHack(a.X - 1, a.Y - 1);
+	if (downleft != nullptr && !downleft->IsStart())
+	{
+		_physics->AddCollidable(downleft);
+		downleft->IsCollidable();
+	}
 }
 
 void PlayingState::CleanUp()
@@ -264,11 +334,14 @@ void PlayingState::CleanUp()
 	std::vector<int> indices;
 	for (int i = 0; i < _maze->size(); i++)
 	{
-		if (!_maze->at(i)->IsEnabled() && !_maze->at(i)->IsStart() && !_maze->at(i)->IsFinish())
+		if (!_maze->at(i)->IsEnabled())
 		{
 			DetectCollidibles(*_maze->at(i));
-			_physics->CleanUp(_maze->at(i));
-			indices.push_back(i);
+			if (!_maze->at(i)->IsStart() && !_maze->at(i)->IsFinish())
+			{
+				_physics->CleanUp(_maze->at(i));
+				indices.push_back(i);
+			}
 		}
 	}
 
