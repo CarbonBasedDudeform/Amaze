@@ -7,11 +7,10 @@ PlayingState::PlayingState()
 	_hero = new HeroPawn();
 	_physics = PhysicsSystem::GetInstance();
 
-	_terrors = new std::vector<AIPawn *>();
-	_terrors->push_back(new AIPawn());
-	_terrors->push_back(new AIPawn());
+	//_terrors = new std::vector<AIPawn *>();
+	//_terrors->push_back(new AIPawn());
+	//_terrors->push_back(new AIPawn());
 
-	_terrorsController = new AIController(_terrors);
 	_placedAI = 0;
 }
 
@@ -24,7 +23,9 @@ PlayingState::~PlayingState()
 
 void PlayingState::Init() {
 	//Init code
-	GenerateMaze(20);
+	int mazeSize = 20;
+	GenerateMaze(mazeSize);
+	//_terrorsController = new AIController(_terrors, mazeSize);
 }
 
 GridBlock * PlayingState::MultiHack(int x, int y)
@@ -168,13 +169,14 @@ GridLocation * PlayingState::CreateDeadend(GridLocation & finish) {
 	cached->Enable(false);
 
 	//place the AIs (the terrors) at the deadends
+	/*
 	if (_placedAI != _terrors->size())
 	{
 		_terrors->at(_placedAI)->WorldX = cached->WorldX;
 		_terrors->at(_placedAI)->WorldY = cached->WorldY;
 		_placedAI++;
 	}
-
+	*/
 	return temp;
 }
 
@@ -370,10 +372,12 @@ void PlayingState::Render(sf::RenderWindow * window) {
 
 	_hero->Render(window);
 
+	/*
 	for (auto iter = _terrors->begin(); iter != _terrors->end(); iter++)
 	{
 		(*iter)->Render(window);
 	}
+	*/
 }
 
 void PlayingState::ProcessInput() {
@@ -383,23 +387,7 @@ void PlayingState::ProcessInput() {
 	bool bottomBlocked = false;
 
 	auto blocked = _physics->IsColliding(_hero);
+	_heroController->Process(blocked);
 
-	if (!blocked.Left && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		_heroController->MoveLeft();
-	}
-	if (!blocked.Right && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		_heroController->MoveRight();
-	}
-	if (!blocked.Up && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		_heroController->MoveUp();
-	} 
-	if (!blocked.Down && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		_heroController->MoveDown();
-	}
-
-	_terrorsController->Think();
+	//_terrorsController->Think();
 }

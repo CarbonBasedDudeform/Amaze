@@ -16,6 +16,7 @@ public:
 	void MoveRight();
 	void MoveUp();
 	void MoveDown();
+	void Process(BlockedDirections) override;
 private:
 	sf::View * _view;
 	HeroPawn * _pawn;

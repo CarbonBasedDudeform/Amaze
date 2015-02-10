@@ -39,3 +39,22 @@ void HeroController::MoveUp() {
 	_pawn->WorldY -= _speed;
 	UpdateView();
 }
+
+void HeroController::Process(BlockedDirections blocked) {
+	if (!blocked.Left && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		MoveLeft();
+	}
+	if (!blocked.Right && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		MoveRight();
+	}
+	if (!blocked.Up && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	{
+		MoveUp();
+	}
+	if (!blocked.Down && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		MoveDown();
+	}
+}
