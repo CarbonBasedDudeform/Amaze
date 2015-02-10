@@ -41,19 +41,19 @@ void HeroController::MoveUp() {
 }
 
 void HeroController::Process(BlockedDirections blocked) {
-	if (!blocked.Left && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (!blocked.Left && ( sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) ) )
 	{
 		MoveLeft();
 	}
-	if (!blocked.Right && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (!blocked.Right && (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)))
 	{
 		MoveRight();
 	}
-	if (!blocked.Up && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	if (!blocked.Up && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)))
 	{
 		MoveUp();
 	}
-	if (!blocked.Down && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	if (!blocked.Down && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)))
 	{
 		MoveDown();
 	}
