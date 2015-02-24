@@ -1,7 +1,10 @@
 # Amaze
 Amaze is a maze game written in C++ and SFML.
 
-https://www.youtube.com/watch?v=rxZWdGOwLFI
+absurdism
+  əbˈsəːdɪz(ə)m/Submit
+  noun
+  the belief that human beings exist in a purposeless, chaotic universe.
 
 Amaze is a game about absurdism.
 
