@@ -7,7 +7,7 @@ class MenuState :
 public:
 	MenuState();
 	~MenuState();
-	void Init() override;
+	void Init(int) override;
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput() override;
 };

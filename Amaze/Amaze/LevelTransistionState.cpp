@@ -10,7 +10,7 @@ LevelTransistionState::~LevelTransistionState()
 {
 }
 
-void LevelTransistionState::Init() {
+void LevelTransistionState::Init(int) {
 	//Init code
 }
 

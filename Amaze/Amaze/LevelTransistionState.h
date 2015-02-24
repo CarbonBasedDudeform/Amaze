@@ -6,7 +6,7 @@ class LevelTransistionState :
 public:
 	LevelTransistionState();
 	~LevelTransistionState();
-	void Init() override;
+	void Init(int) override;
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput() override;
 };

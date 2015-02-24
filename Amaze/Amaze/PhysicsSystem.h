@@ -22,10 +22,12 @@ public:
 	BlockedDirections IsColliding(Pawn*);
 
 	bool AreColliding(float, float, int, Pawn*);
+	bool AreColliding(Pawn*, Pawn*);
 	float FindDistance(float, float, Pawn*);
 
 	void AddCollidable(Pawn *);
 	void CleanUp(Pawn *);
+	void Reset();
 private:
 	static PhysicsSystem * _instance;
 	PhysicsSystem();

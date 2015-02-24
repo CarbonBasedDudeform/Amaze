@@ -10,7 +10,7 @@ MenuState::~MenuState()
 {
 }
 
-void MenuState::Init() {
+void MenuState::Init(int) {
 	//Init code
 }
 

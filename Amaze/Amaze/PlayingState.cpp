@@ -21,9 +21,8 @@ PlayingState::~PlayingState()
 	delete _heroController;
 }
 
-void PlayingState::Init() {
+void PlayingState::Init(int mazeSize) {
 	//Init code
-	int mazeSize = 20;
 	GenerateMaze(mazeSize);
 	//_terrorsController = new AIController(_terrors, mazeSize);
 }
@@ -103,6 +102,7 @@ void PlayingState::CreateFinish(int x, int y)
 {
 	//mak = multidimension array hack
 	MultiHack(x,y)->MakeFinish();
+	_finishPoint = MultiHack(x, y);
 }
 
 void PlayingState::CreateFauxRoutes(unsigned int amount) {
@@ -243,7 +243,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//right
 	auto xplus1 = MultiHack(a.X + 1, a.Y);
-	if (xplus1 != nullptr && !xplus1->IsStart()) {
+	if (xplus1 != nullptr && !xplus1->IsStart() && !xplus1->IsFinish()) {
 		_physics->AddCollidable(xplus1);
 		xplus1->IsCollidable();
 	}
@@ -254,7 +254,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//left
 	auto xminus1 = MultiHack(a.X - 1, a.Y);
-	if (xminus1 != nullptr && !xminus1->IsStart()) {
+	if (xminus1 != nullptr && !xminus1->IsStart() && !xminus1->IsFinish()) {
 		_physics->AddCollidable(xminus1);
 		xminus1->IsCollidable();
 	}
@@ -265,7 +265,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//up
 	auto yplus1 = MultiHack(a.X, a.Y + 1);
-	if (yplus1 != nullptr && !yplus1->IsStart()) {
+	if (yplus1 != nullptr && !yplus1->IsStart() && !yplus1->IsFinish()) {
 		_physics->AddCollidable(yplus1);
 		yplus1->IsCollidable();
 	}
@@ -276,7 +276,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 	// |___|_#_|___|
 	//down
 	auto yminus1 = MultiHack(a.X, a.Y - 1);
-	if (yminus1 != nullptr && !yminus1->IsStart()){
+	if (yminus1 != nullptr && !yminus1->IsStart() && !yminus1->IsFinish()){
 		_physics->AddCollidable(yminus1);
 		yminus1->IsCollidable();
 	}
@@ -287,7 +287,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//up and left
 	auto upleft = MultiHack(a.X - 1, a.Y + 1);
-	if (upleft != nullptr && !upleft->IsStart())
+	if (upleft != nullptr && !upleft->IsStart() && !upleft->IsFinish())
 	{
 		_physics->AddCollidable(upleft);
 		upleft->IsCollidable();
@@ -299,7 +299,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//up and right
 	auto upright = MultiHack(a.X + 1, a.Y + 1);
-	if (upright != nullptr && !upright->IsStart())
+	if (upright != nullptr && !upright->IsStart() && !upright->IsFinish())
 	{
 		_physics->AddCollidable(upright);
 		upright->IsCollidable();
@@ -311,7 +311,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 	// |___|___|_#_|
 	//down and right
 	auto downright = MultiHack(a.X + 1, a.Y - 1);
-	if (downright != nullptr && !downright->IsStart())
+	if (downright != nullptr && !downright->IsStart() && !downright->IsFinish())
 	{
 		_physics->AddCollidable(downright);
 		downright->IsCollidable();
@@ -323,7 +323,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 	// |_#_|___|___|
 	//down and left
 	auto downleft = MultiHack(a.X - 1, a.Y - 1);
-	if (downleft != nullptr && !downleft->IsStart())
+	if (downleft != nullptr && !downleft->IsStart() && !downleft->IsFinish())
 	{
 		_physics->AddCollidable(downleft);
 		downleft->IsCollidable();
@@ -390,4 +390,18 @@ void PlayingState::ProcessInput() {
 	_heroController->Process(blocked);
 
 	//_terrorsController->Think();
+}
+
+GameState * PlayingState::Update()
+{
+	if (_physics->AreColliding(_hero, _finishPoint))
+	{
+		_physics->Reset();
+		auto nextLevel = new PlayingState();
+		nextLevel->Init(_size+1);
+		delete this;
+		return nextLevel;
+	}
+
+	return this;
 }

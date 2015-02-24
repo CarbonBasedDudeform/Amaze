@@ -27,7 +27,7 @@ Game::~Game()
 
 bool Game::Init()
 {
-	_curGameState->Init();
+	_curGameState->Init(5);
 	return true;
 }
 
@@ -41,6 +41,8 @@ void Game::Loop()
 			if (event.type == sf::Event::Closed)
 				_window->close();
 		}
+		_curGameState = _curGameState->Update();
+
 		//check user input
 		_curGameState->ProcessInput();
 		//render

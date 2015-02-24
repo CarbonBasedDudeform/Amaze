@@ -11,8 +11,9 @@ public:
 	GameState();
 	//effective C++, ensures that if the derived classes get deleted then the base class destructor is called
 	virtual ~GameState();
-	virtual void Init() = 0;
+	virtual void Init(int) = 0;
 	virtual void Render(sf::RenderWindow * window) = 0;
 	virtual void ProcessInput() = 0;
+	virtual GameState * Update() = 0;
 };
 

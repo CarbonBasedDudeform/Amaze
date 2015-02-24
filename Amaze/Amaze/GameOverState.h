@@ -6,7 +6,7 @@ class GameOverState :
 public:
 	GameOverState();
 	~GameOverState();
-	void Init() override;
+	void Init(int) override;
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput() override;
 };

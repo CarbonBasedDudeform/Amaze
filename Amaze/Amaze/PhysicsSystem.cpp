@@ -38,6 +38,11 @@ void PhysicsSystem::CleanUp(Pawn * pawn) {
 	}
 }
 
+void PhysicsSystem::Reset()
+{
+	_collidables->clear();
+}
+
 BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 {
 	int buffer = 5;
@@ -63,6 +68,11 @@ bool PhysicsSystem::AreColliding(float x1, float y1, int size, Pawn * pwn) {
 	}
 
 	return false;
+}
+
+bool PhysicsSystem::AreColliding(Pawn * one, Pawn * two)
+{
+	return AreColliding(one->WorldX, one->WorldY, one->Size, two);
 }
 
 float PhysicsSystem::FindDistance(float x1, float y1, Pawn * pwn) {

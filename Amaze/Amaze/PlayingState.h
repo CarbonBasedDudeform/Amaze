@@ -20,9 +20,10 @@ class PlayingState :
 public:
 	PlayingState();
 	~PlayingState();
-	void Init() override;
+	void Init(int) override;
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput() override;
+	GameState * Update() override;
 	void GenerateMaze(int size);
 
 private:
@@ -33,6 +34,7 @@ private:
 	std::vector<GridBlock *> *  _maze;
 	GridLocation * _start;
 	GridLocation * _finish;
+	GridBlock * _finishPoint;
 
 	void CreateStartAndFinishLocations(GridLocation &, GridLocation &);
 	void CreateFauxRoutes(unsigned int);
