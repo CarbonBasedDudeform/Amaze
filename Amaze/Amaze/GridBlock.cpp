@@ -33,7 +33,10 @@ GridBlock::~GridBlock()
 
 void GridBlock::Render(sf::RenderWindow * window)
 {
-	if (_display || _IsFinish || _IsStart) 	window->draw(*_block);
+	if (_display || _IsFinish || _IsStart) 	{
+		_block->setFillColor(Colour);
+		window->draw(*_block);
+	}
 }
 
 void GridBlock::Enable(bool val)
@@ -57,14 +60,16 @@ void GridBlock::MakeStart() {
 	_IsStart = true;
 	_display = false;
 
-	_block->setFillColor(sf::Color::Yellow);
+	Colour = sf::Color::Yellow;
+	RenderColour = Colour;
 }
 
 void GridBlock::MakeFinish() {
 	_IsFinish = true;
 	_display = false;
 
-	_block->setFillColor(sf::Color::Magenta);
+	Colour = sf::Color::Magenta;
+	RenderColour = Colour;
 }
 
 

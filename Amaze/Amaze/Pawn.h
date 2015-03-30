@@ -15,6 +15,8 @@ public:
 	float WorldY;
 	virtual void Render(sf::RenderWindow * window) = 0;
 	float Size;
+	sf::Color Colour;
+	sf::Color RenderColour;
 protected:
 	sf::Texture * _texture;
 	sf::Sprite * _sprite;

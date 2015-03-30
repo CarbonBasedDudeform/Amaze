@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML\Graphics\Shader.hpp>
 #include "GameState.h"
 #include "GridBlock.h"
 
@@ -58,6 +59,9 @@ private:
 	std::vector<AIPawn *> * _terrors;
 	AIController * _terrorsController;
 	int _placedAI;
+
+	static const float BUBBLE_SIZE;
+	float DistanceToHero(Pawn*);
 
 };
 

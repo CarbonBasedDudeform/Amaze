@@ -43,7 +43,11 @@ void PlayingState::GenerateMaze(int size) {
 	//populate
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < size; ++j) {
-			_maze->push_back(new GridBlock(j,i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i));
+			auto gridBlock = new GridBlock(j, i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i);
+			gridBlock->Colour = sf::Color(255, 0, 0);
+			gridBlock->RenderColour = gridBlock->Colour;
+			_maze->push_back(gridBlock);
+			
 		}
 	}
 
@@ -360,14 +364,36 @@ void PlayingState::CleanUp()
 	}
 }
 
+float PlayingState::DistanceToHero(Pawn * pawn)
+{
+	float x = _hero->WorldX - pawn->WorldX;
+	float y = _hero->WorldY - pawn->WorldY;
+
+	return sqrtf( (x*x) + (y*y) );
+}
+
+const float PlayingState::BUBBLE_SIZE = 150.0f;
+
 void PlayingState::Render(sf::RenderWindow * window) {
+
 	//set the camera
 	window->setView(*_heroController->GetView());
 
 	//cycle through and render all the walls of the maze	
 	for (auto iter = _maze->begin(); iter != _maze->end(); iter++)
 	{
+		float dist = DistanceToHero((*iter));
+		float inter = 1.0f - (dist / BUBBLE_SIZE);
+		
+		if (inter < 0) continue;
+
+		(*iter)->Colour.r *= inter;
+		(*iter)->Colour.g *= inter;
+		(*iter)->Colour.b *= inter;
+
 		(*iter)->Render(window);
+
+		(*iter)->Colour = (*iter)->RenderColour;
 	}
 
 	_hero->Render(window);
