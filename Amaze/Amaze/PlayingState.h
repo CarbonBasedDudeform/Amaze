@@ -14,6 +14,10 @@
 //stl
 #include <vector>
 
+struct PlayingStateOptions {
+	int LevelSize;
+	PlayingStateOptions(int size) : LevelSize(size) {};
+};
 
 class PlayingState :
 	public GameState
@@ -21,7 +25,7 @@ class PlayingState :
 public:
 	PlayingState();
 	~PlayingState();
-	void Init(int) override;
+	void Init(PlayingStateOptions opts);
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput() override;
 	GameState * Update() override;

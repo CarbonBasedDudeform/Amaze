@@ -1,8 +1,10 @@
+#pragma once
 #include "MenuState.h"
 
 
 MenuState::MenuState()
 {
+	_nextState = this;
 }
 
 
@@ -10,7 +12,7 @@ MenuState::~MenuState()
 {
 }
 
-void MenuState::Init(int) {
+void MenuState::Init(GameStateOptions opts) {
 	//Init code
 }
 
@@ -21,5 +23,14 @@ void MenuState::Render(sf::RenderWindow * window) {
 }
 
 void MenuState::ProcessInput() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		auto options = PlayingStateOptions(INITIAL_MAZE_SIZE);
+		auto state = new PlayingState();
+		state->Init(options);
+		_nextState = state;
+	}
+}
 
+GameState * MenuState::Update() {
+	return _nextState;
 }

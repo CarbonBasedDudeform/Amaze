@@ -15,7 +15,7 @@ Game * Game::GetInstance()
 Game::Game()
 {
 	_window = new sf::RenderWindow(sf::VideoMode(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT), GAME_TITLE);
-	_curGameState = new PlayingState();
+	_curGameState = new MenuState();
 }
 
 
@@ -27,7 +27,7 @@ Game::~Game()
 
 bool Game::Init()
 {
-	_curGameState->Init(5);
+	_curGameState->Init(GameStateOptions()); //no options needed for the initial state atm.
 	return true;
 }
 

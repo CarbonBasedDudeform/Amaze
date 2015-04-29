@@ -10,7 +10,7 @@ LevelTransistionState::~LevelTransistionState()
 {
 }
 
-void LevelTransistionState::Init(int) {
+void LevelTransistionState::Init(GameStateOptions opts) {
 	//Init code
 }
 

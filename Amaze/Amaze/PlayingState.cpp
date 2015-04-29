@@ -21,9 +21,9 @@ PlayingState::~PlayingState()
 	delete _heroController;
 }
 
-void PlayingState::Init(int mazeSize) {
+void PlayingState::Init(PlayingStateOptions opts) {
 	//Init code
-	GenerateMaze(mazeSize);
+	GenerateMaze(opts.LevelSize);
 	//_terrorsController = new AIController(_terrors, mazeSize);
 }
 
@@ -424,7 +424,8 @@ GameState * PlayingState::Update()
 	{
 		_physics->Reset();
 		auto nextLevel = new PlayingState();
-		nextLevel->Init(_size+1);
+		auto options = PlayingStateOptions(_size + 1);
+		nextLevel->Init(options);
 		delete this;
 		return nextLevel;
 	}

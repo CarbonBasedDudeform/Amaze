@@ -10,7 +10,7 @@ GameOverState::~GameOverState()
 {
 }
 
-void GameOverState::Init(int) {
+void GameOverState::Init(GameStateOptions opts) {
 	//Init code
 }
 
