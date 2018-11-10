@@ -52,3 +52,5 @@ Amaze/.vs/Amaze/v15/*
 *.ipdb
 *.iobj
 *.idb
+*.ilk
+*.exe
