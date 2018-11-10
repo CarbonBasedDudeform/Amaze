@@ -29,6 +29,7 @@ void PhysicsSystem::AddCollidable(Pawn * pawn)
 }
 
 void PhysicsSystem::CleanUp(Pawn * pawn) {
+	
 	for (int i = 0; i < _collidables->size(); i++){
 		//if collidable[i] points to the same memory location as the pawn they're the same thing
 		if (&(*(_collidables->at(i))) == &(*pawn)) {
@@ -36,6 +37,8 @@ void PhysicsSystem::CleanUp(Pawn * pawn) {
 			return;
 		}
 	}
+
+	//_collidables->clear();
 }
 
 void PhysicsSystem::Reset()

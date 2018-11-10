@@ -47,7 +47,7 @@ void PlayingState::GenerateMaze(int size) {
 			gridBlock->Colour = sf::Color(255, 0, 0);
 			gridBlock->RenderColour = gridBlock->Colour;
 			_maze->push_back(gridBlock);
-			
+			_physics->AddCollidable(gridBlock);
 		}
 	}
 
@@ -105,8 +105,9 @@ void PlayingState::CreateStart(int x, int y)
 void PlayingState::CreateFinish(int x, int y)
 {
 	//mak = multidimension array hack
-	MultiHack(x,y)->MakeFinish();
 	_finishPoint = MultiHack(x, y);
+	_finishPoint->MakeFinish();
+	_physics->CleanUp(_finishPoint);
 }
 
 void PlayingState::CreateFauxRoutes(unsigned int amount) {
@@ -171,7 +172,7 @@ GridLocation * PlayingState::CreateDeadend(GridLocation & finish) {
 	auto cached = MultiHack(temp->X, temp->Y);
 	//make the deadend empty
 	cached->Enable(false);
-
+	_physics->CleanUp(cached);
 	//place the AIs (the terrors) at the deadends
 	/*
 	if (_placedAI != _terrors->size())
@@ -213,26 +214,34 @@ void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 	if (a.Y > _size) a.Y = 0;
 
 	if (a.X < b.X ) {
-		MultiHack(a.X, a.Y)->Enable(false);
+		auto block = MultiHack(a.X, a.Y);
+		block->Enable(false);
+		_physics->CleanUp(block);
 		GridLocation temp;
 		temp.X = a.X + 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
 	} else if (a.X > b.X) {
-		MultiHack(a.X, a.Y)->Enable(false);
+		auto block = MultiHack(a.X, a.Y);
+		block->Enable(false);
+		_physics->CleanUp(block);
 		GridLocation temp;
 		temp.X = a.X - 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
 	}else if (a.Y < b.Y) {
-		MultiHack(a.X, a.Y)->Enable(false);
+		auto block = MultiHack(a.X, a.Y);
+		block->Enable(false);
+		_physics->CleanUp(block);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y + 1;
 		CreateRoute(temp, b);
 	} else if (a.Y > b.Y)
 	{
-		MultiHack(a.X, a.Y)->Enable(false);
+		auto block = MultiHack(a.X, a.Y);
+		block->Enable(false);
+		_physics->CleanUp(block);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y - 1;
@@ -337,7 +346,7 @@ void PlayingState::DetectCollidibles(GridBlock & a) {
 void PlayingState::CleanUp()
 {
 	//identify the indices of parts of the maze which can be removed (because they are not displayed and not the start or finish)
-	std::vector<int> indices;
+	/*std::vector<int> indices;
 	for (int i = 0; i < _maze->size(); i++)
 	{
 		if (!_maze->at(i)->IsEnabled())
@@ -350,7 +359,7 @@ void PlayingState::CleanUp()
 			}
 		}
 	}
-
+	
 	//remove the parts of the maze here because if it is done above then the size of maze decreases with each removal and elements get
 	//reshuffled causing problems with using the multidimenional access hack.
 	for (int i = 0; i < indices.size(); i++)
@@ -359,9 +368,10 @@ void PlayingState::CleanUp()
 		//because the indices is order from lowest to highest (ie. in the order 10, 15, 205, 6000) then you can assume
 		//that each removal moves the indices down by one. thus after N removals, the indices will have moved down by N.
 		//making the previous list, with 10 and 15 removed, become: 203, 5998
-		delete _maze->at((indices.at(i) - i));
-		_maze->erase(_maze->begin() + (indices.at(i) - i));
+		//delete _maze->at((indices.at(i) - i));
+		//_maze->erase(_maze->begin() + (indices.at(i) - i));
 	}
+	*/
 }
 
 float PlayingState::DistanceToHero(Pawn * pawn)
