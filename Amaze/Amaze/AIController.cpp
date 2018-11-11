@@ -1,24 +1,32 @@
 #include "AIController.h"
 
-
-AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, int mazeSize)
+AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, Maze * maze, PhysicsSystem * physics)
 {
+	_physics = physics;
+	_maze = maze;
 	_pawns = std::make_unique<std::vector<std::unique_ptr<AIPawnWrapper>>>();
 
+	auto& deadends = _maze->GetDeadends();
+
+	int i = 0;
 	for (auto iter = pawns->begin(); iter != pawns->end(); iter++)
 	{
 		auto temp = std::make_unique<AIPawnWrapper>();
 		temp->pawn = (*iter).get();
+		auto & block = _maze->GetBlock(deadends.at(i)->X, deadends.at(i)->Y);
+		temp->pawn->WorldX = block.WorldX;
+		temp->pawn->WorldY = block.WorldY;
+		_physics->AddCollidable(temp->pawn);
 		_pawns->push_back(std::move(temp));
+		i++;
 	}
 
-	_speed = 0.5f;
+	_speed = 0.02f;
 	_heroLocation = std::make_unique<Belief>();
-	_heroLocation->X = rand() % mazeSize;
-	_heroLocation->Y = rand() % mazeSize;
+	_heroLocation->X = rand() % _maze->GetSize();
+	_heroLocation->Y = rand() % _maze->GetSize();
 	_heroLocation->WorldX = (_heroLocation->X * GridBlock::WALL_LENGTH) + GridBlock::WALL_LENGTH / 2; //this is the equation to calculate world pos, the offset is the grid position * the length of a wall, plus half for the centre of the wall
 	_heroLocation->WorldY = (_heroLocation->Y * GridBlock::WALL_LENGTH) + GridBlock::WALL_LENGTH / 2;
-	_physics = std::make_unique<PhysicsSystem>();
 }
 
 AIController::~AIController()
@@ -37,7 +45,7 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 		if (!(*iter)->PreviousMoveOK)
 		{
 			//decide new intention
-			(*iter)->MyIntention = DecideIntent((*iter)->MyIntention);
+			(*iter)->MyIntention = DecideIntent((*iter).get(), (*iter)->MyIntention);
 		}
 
 		//and move
@@ -45,37 +53,41 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 	}
 }
 
-Intention AIController::DecideIntent(Intention previousIntent) {
+Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousIntent) {
 	Intention intent;
-
-	//try a new way, one that's not the same as the last
-	if (previousIntent.Left) {
-		int rand = std::rand() % 100;
-		if (rand < 33) intent.Right = true;
-		else if (rand < 66) intent.Up = true;
-		else intent.Down = true;
-	} else if (previousIntent.Right) {
-		int rand = std::rand() % 100;
-		if (rand < 33) intent.Left = true;
-		else if (rand < 66) intent.Up = true;
-		else intent.Down = true;
-	} else if (previousIntent.Up) {
-		int rand = std::rand() % 100;
-		if (rand < 33) intent.Right = true;
-		else if (rand < 66) intent.Left = true;
-		else intent.Down = true;
-	} else if (previousIntent.Down) {
-		int rand = std::rand() % 100;
-		if (rand < 33) intent.Right = true;
-		else if (rand < 66) intent.Up = true;
-		else intent.Left = true;
+	auto blocked = _physics->RayCastCollide(pawn->pawn, VIEW_DISTANCE);
+	if (blocked.Left.Distance > blocked.Right.Distance) {
+		intent.Right = false;
+		intent.Left = true;
 	}
-	else {
-		int rand = std::rand() % 100;
-		if (rand < 25) intent.Right = true;
-		else if (rand < 50) intent.Up = true;
-		else if (rand < 75) intent.Left = true;
-		else intent.Down = true;
+	else if (blocked.Left.Distance < blocked.Right.Distance)
+	{
+		intent.Left = false;
+		intent.Right = true;
+	}
+	else if (blocked.Left.Distance == blocked.Right.Distance)
+	{
+		if (!previousIntent.Left && !previousIntent.Right)
+		{
+			previousIntent.Left = true;
+		}
+		intent.Left = previousIntent.Left;
+		intent.Right = previousIntent.Right;
+	}
+
+	if (blocked.Up.Distance > blocked.Down.Distance) {
+		intent.Down = false;
+		intent.Up = true;
+	}
+	else if (blocked.Up.Distance < blocked.Down.Distance)
+	{
+		intent.Up = false;
+		intent.Down = true;
+		if (!previousIntent.Up && !previousIntent.Down)
+		{
+			previousIntent.Down = true;
+		}
+		intent.Up = previousIntent.Up;
 	}
 
 	return intent;
@@ -92,33 +104,21 @@ void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
 }
 
 bool AIController::MoveLeft(AIPawn * pawn, float timeDelta) {
-	auto blockedDirs = _physics->IsColliding(pawn);
-	if (blockedDirs.Left) return false;
-
 	pawn->WorldX -= _speed * timeDelta;
 	return true;
 }
 
 bool AIController::MoveRight(AIPawn * pawn, float timeDelta) {
-	auto blockedDirs = _physics->IsColliding(pawn);
-	if (blockedDirs.Right) return false;
-
 	pawn->WorldX += _speed * timeDelta;
 	return true;
 }
 
 bool AIController::MoveUp(AIPawn * pawn, float timeDelta) {
-	auto blockedDirs = _physics->IsColliding(pawn);
-	if (blockedDirs.Up) return false;
-
 	pawn->WorldY -= _speed * timeDelta;
 	return true;
 }
 
 bool AIController::MoveDown(AIPawn * pawn, float timeDelta) {
-	auto blockedDirs = _physics->IsColliding(pawn);
-	if (blockedDirs.Down) return false;
-
 	pawn->WorldY += _speed * timeDelta;
 	return true;
 }

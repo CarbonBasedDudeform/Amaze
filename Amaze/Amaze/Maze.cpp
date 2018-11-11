@@ -45,7 +45,7 @@ void Maze::GenerateMaze(int size) {
 	CreateRoute(*_start, *_finish);
 
 	//proceed to create false routes from the start -- these lead the player to other deadends
-	CreateFauxRoutes(_size / 2);
+	_deadends = CreateFauxRoutes(_size / 2);
 }
 
 //takes two GridLocations as input by reference and populates them with the (x,y) in the maze of their respective positions
@@ -87,8 +87,9 @@ void Maze::CreateFinish(int x, int y)
 	_physics->RemoveCollidable(_finishPoint);
 }
 
-void Maze::CreateFauxRoutes(unsigned int amount) {
+std::vector<std::unique_ptr<GridLocation>> Maze::CreateFauxRoutes(unsigned int amount) {
 	std::vector<std::unique_ptr<GridLocation>> deadends;
+
 	//generate the given amount of routes
 	while (deadends.size() < amount) {
 		auto temp = CreateDeadend(*_start); //this should get refactored, complexity is growing, old code isn't being updated to reflect the changes
@@ -125,6 +126,8 @@ void Maze::CreateFauxRoutes(unsigned int amount) {
 	{
 		CreateRoute(*_start, *deadends.at(i));
 	}
+
+	return deadends;
 }
 
 std::unique_ptr<GridLocation> Maze::CreateDeadend(GridLocation & finish) {
@@ -351,6 +354,16 @@ GridBlock * Maze::GetStart() const
 int Maze::GetSize() const
 {
 	return _size;
+}
+
+const std::vector<std::unique_ptr<GridLocation>>& Maze::GetDeadends() const
+{
+	return _deadends;
+}
+
+const GridBlock & Maze::GetBlock(int x, int y)
+{
+	return *(MultiHack(x, y));
 }
 
 float Maze::DistanceToHero(Pawn * pawn, Pawn * hero)

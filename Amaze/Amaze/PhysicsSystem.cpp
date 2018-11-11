@@ -37,16 +37,59 @@ void PhysicsSystem::Reset()
 	_collidables->clear();
 }
 
+BlockedDirections PhysicsSystem::RayCastCollide(Pawn * from, int distance)
+{
+	BlockedDirections temp;
+	temp.Left.Distance = distance;
+	temp.Right.Distance = distance;
+	temp.Up.Distance = distance;
+	temp.Down.Distance = distance;
+
+	for (int buffer = 0; buffer < distance; buffer += 1)
+	{
+		for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
+		{
+			if ((*iter) == from) continue;
+			if (temp.Left.Blocked && temp.Right.Blocked && temp.Up.Blocked && temp.Down.Blocked) return std::move(temp);
+
+			if (!temp.Left.Blocked)
+			{
+				temp.Left.Blocked = AreColliding(from->WorldX - buffer, from->WorldY, from->Size, (*iter));
+				if (temp.Left.Blocked) temp.Left.Distance = buffer;
+			}
+			if (!temp.Right.Blocked)
+			{
+				temp.Right.Blocked = AreColliding(from->WorldX + buffer, from->WorldY, from->Size, (*iter));
+				if (temp.Right.Blocked) temp.Right.Distance = buffer;
+			}
+			if (!temp.Up.Blocked)
+			{
+				temp.Up.Blocked = AreColliding(from->WorldX, from->WorldY - buffer, from->Size, (*iter));
+				if (temp.Up.Blocked) temp.Up.Distance = buffer;
+			}
+			if (!temp.Down.Blocked)
+			{
+				temp.Down.Blocked = AreColliding(from->WorldX, from->WorldY + buffer, from->Size, (*iter));
+				if (temp.Down.Blocked) temp.Down.Distance = buffer;
+			}
+		}
+	}
+
+	return std::move(temp);
+}
+
 BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 {
 	int buffer = 5;
 	BlockedDirections temp;
 	for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
 	{
-		if (!temp.Left) temp.Left = AreColliding(pawn->WorldX - buffer, pawn->WorldY, pawn->Size, (*iter));
-		if (!temp.Right) temp.Right = AreColliding(pawn->WorldX + buffer, pawn->WorldY, pawn->Size, (*iter));
-		if (!temp.Up) temp.Up = AreColliding(pawn->WorldX, pawn->WorldY - buffer, pawn->Size, (*iter));
-		if (!temp.Down) temp.Down = AreColliding(pawn->WorldX, pawn->WorldY + buffer, pawn->Size, (*iter));
+		if ((*iter) == pawn) continue;
+
+		if (!temp.Left.Blocked) temp.Left.Blocked = AreColliding(pawn->WorldX - buffer, pawn->WorldY, pawn->Size, (*iter));
+		if (!temp.Right.Blocked) temp.Right.Blocked = AreColliding(pawn->WorldX + buffer, pawn->WorldY, pawn->Size, (*iter));
+		if (!temp.Up.Blocked) temp.Up.Blocked = AreColliding(pawn->WorldX, pawn->WorldY - buffer, pawn->Size, (*iter));
+		if (!temp.Down.Blocked) temp.Down.Blocked = AreColliding(pawn->WorldX, pawn->WorldY + buffer, pawn->Size, (*iter));
 	}
 
 	return temp;

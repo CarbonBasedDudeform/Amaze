@@ -29,7 +29,7 @@ void PlayingState::Init(PlayingStateOptions opts) {
 	//:::::::::::::::IMPORTANT::::::::::::::: HeroController is created here so that the camera can be focused on the hero pawn correctly.
 	//										 aka, herocontroller needs to be created after the pawns WorldX and Y have been set
 	_heroController = std::make_unique<HeroController>(_hero.get());
-	_terrorsController = std::make_unique<AIController>(_terrors.get(), _maze->GetSize());
+	_terrorsController = std::make_unique<AIController>(_terrors.get(), _maze.get(), _physics.get());
 }
 
 const float PlayingState::BUBBLE_SIZE = 300.0f;

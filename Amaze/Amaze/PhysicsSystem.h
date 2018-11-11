@@ -2,15 +2,22 @@
 #include "Pawn.h"
 #include <vector>
 
-class BlockedDirections
+struct Direction
 {
-public:
-	BlockedDirections() :Left(false), Right(false), Up(false), Down(false) {}
+	Direction() : Blocked(false), Distance(0) {}
+	Direction(const Direction &copy) : Blocked(copy.Blocked), Distance(copy.Distance) {}
+	bool Blocked;
+	int Distance;
+};
+
+struct BlockedDirections
+{
+	BlockedDirections() :Left(Direction()), Right(Direction()), Up(Direction()), Down(Direction()) {}
 	BlockedDirections(const BlockedDirections &copy) : Left(copy.Left), Right(copy.Right), Up(copy.Up), Down(copy.Down) {}
-	bool Left;
-	bool Right;
-	bool Up;
-	bool Down;
+	Direction Left;
+	Direction Right;
+	Direction Up;
+	Direction Down;
 };
 
 class PhysicsSystem
@@ -28,6 +35,7 @@ public:
 	void AddCollidable(Pawn *);
 	void RemoveCollidable(Pawn *);
 	void Reset();
+	BlockedDirections RayCastCollide(Pawn * from, int distance);
 private:
 
 

@@ -3,6 +3,7 @@
 #include "AIPawn.h"
 #include "PhysicsSystem.h"
 #include "GridBlock.h"
+#include "Maze.h"
 
 #include <memory>
 #include <vector>
@@ -50,11 +51,12 @@ class AIController :
 	public Controller
 {
 public:
-	AIController(std::vector<std::unique_ptr<AIPawn>> *, int);
+	AIController(std::vector<std::unique_ptr<AIPawn>> *, Maze *, PhysicsSystem *);
 	~AIController();
 	void Process(BlockedDirections, float timeDelta) override;
 
 private:
+	const int VIEW_DISTANCE = 100;
 	std::unique_ptr<std::vector<std::unique_ptr<AIPawnWrapper>>> _pawns;
 	
 	void FindOpenSpace();
@@ -65,9 +67,9 @@ private:
 	bool MoveUp(AIPawn *, float timeDelta);
 	bool MoveDown(AIPawn *, float timeDelta);
 
-	std::unique_ptr<PhysicsSystem> _physics;
-
+	PhysicsSystem * _physics;
+	Maze * _maze;
 	std::unique_ptr<Belief> _heroLocation;
-	Intention DecideIntent(Intention);
+	Intention DecideIntent(AIPawnWrapper * pawn, Intention);
 };
 

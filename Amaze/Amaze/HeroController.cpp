@@ -41,19 +41,19 @@ void HeroController::MoveUp(float timeDelta) {
 }
 
 void HeroController::Process(BlockedDirections blocked, float timeDelta) {
-	if (!blocked.Left && ( sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) ) )
+	if (!blocked.Left.Blocked && ( sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) ) )
 	{
 		MoveLeft(timeDelta);
 	}
-	if (!blocked.Right && (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)))
+	if (!blocked.Right.Blocked && (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)))
 	{
 		MoveRight(timeDelta);
 	}
-	if (!blocked.Up && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)))
+	if (!blocked.Up.Blocked && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)))
 	{
 		MoveUp(timeDelta);
 	}
-	if (!blocked.Down && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)))
+	if (!blocked.Down.Blocked && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)))
 	{
 		MoveDown(timeDelta);
 	}

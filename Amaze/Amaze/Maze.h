@@ -13,6 +13,8 @@ public:
 	GridBlock * GetFinish() const;
 	GridBlock * GetStart() const;
 	int GetSize() const;
+	const std::vector<std::unique_ptr<GridLocation>>& GetDeadends() const;
+	const GridBlock& GetBlock(int x, int y);
 private:
 	const int MAX_ATTEMPTS = 50; //max attempts at generating random values when creating routes
 	int _size;
@@ -22,9 +24,10 @@ private:
 	GridBlock * _finishPoint;
 	GridBlock * _startPoint;
 	PhysicsSystem * _physics;
+	std::vector<std::unique_ptr<GridLocation>> _deadends;
 
 	void CreateStartAndFinishLocations(GridLocation &, GridLocation &);
-	void CreateFauxRoutes(unsigned int);
+	std::vector<std::unique_ptr<GridLocation>> CreateFauxRoutes(unsigned int);
 	void CreateStart(int, int);
 	void CreateFinish(int, int);
 	std::unique_ptr<GridLocation> CreateDeadend(GridLocation &);
