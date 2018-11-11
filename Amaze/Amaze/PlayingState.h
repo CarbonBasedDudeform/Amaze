@@ -10,6 +10,7 @@
 #include "AIPawn.h"
 
 #include "PhysicsSystem.h"
+#include "Maze.h"
 
 //stl
 #include <vector>
@@ -29,32 +30,11 @@ public:
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput(float delta) override;
 	GameState * Update() override;
-	void GenerateMaze(int size);
+
 
 private:
-	const int MAX_ATTEMPTS = 50; //max attempts at generating random values when creating routes
-	GridBlock * MultiHack(int, int); //util method for accessing the vector like a 2D array
-	//THE MAZE
-	int _size;
-	std::unique_ptr<std::vector<std::unique_ptr<GridBlock>>> _maze;
-	std::unique_ptr<GridLocation> _start;
-	std::unique_ptr<GridLocation> _finish;
-	GridBlock * _finishPoint;
-
-	void CreateStartAndFinishLocations(GridLocation &, GridLocation &);
-	void CreateFauxRoutes(unsigned int);
-	std::unique_ptr<GridLocation> CreateDeadend(GridLocation &);
-	bool MeetsConstraints(GridLocation &, GridLocation &);
-	int FindDistance(GridLocation &, GridLocation &);
-	void CreateRoute(GridLocation, GridLocation);
-	void DetectCollidibles(GridBlock &);
-	void CleanUp();
-
-	void CreateStart(int, int);
-	void CreateFinish(int, int);
-
 	std::unique_ptr<PhysicsSystem> _physics;
-
+	std::unique_ptr<Maze> _maze;
 	//The Hero (Thero)
 	std::unique_ptr<HeroPawn> _hero;
 	std::unique_ptr<HeroController> _heroController;
@@ -65,7 +45,5 @@ private:
 	int _placedAI;
 
 	static const float BUBBLE_SIZE;
-	float DistanceToHero(Pawn*);
-
 };
 

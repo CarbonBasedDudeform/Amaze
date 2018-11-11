@@ -98,6 +98,7 @@
     <ClCompile Include="HeroPawn.cpp" />
     <ClCompile Include="LevelTransistionState.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Maze.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="HeroController.h" />
     <ClInclude Include="HeroPawn.h" />
     <ClInclude Include="LevelTransistionState.h" />
+    <ClInclude Include="Maze.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="PhysicsSystem.h" />

@@ -84,6 +84,9 @@
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Source Files\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="Maze.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -132,6 +135,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Maze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
