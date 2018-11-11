@@ -56,6 +56,16 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousIntent) {
 	Intention intent;
 	auto blocked = _physics->RayCastCollide(pawn->pawn, VIEW_DISTANCE);
+
+	if (previousIntent.Down && !blocked.Down.Blocked ||
+		previousIntent.Up && !blocked.Up.Blocked ||
+		previousIntent.Left && !blocked.Left.Blocked ||
+		previousIntent.Right && !blocked.Right.Blocked
+		)
+	{
+		return previousIntent;
+	}
+
 	if (blocked.Left.Distance > blocked.Right.Distance) {
 		intent.Right = false;
 		intent.Left = true;

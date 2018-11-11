@@ -56,7 +56,7 @@ public:
 	void Process(BlockedDirections, float timeDelta) override;
 
 private:
-	const int VIEW_DISTANCE = 100;
+	const int VIEW_DISTANCE = 5;
 	std::unique_ptr<std::vector<std::unique_ptr<AIPawnWrapper>>> _pawns;
 	
 	void FindOpenSpace();
