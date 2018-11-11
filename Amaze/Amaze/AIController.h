@@ -58,12 +58,12 @@ private:
 	std::unique_ptr<std::vector<std::unique_ptr<AIPawnWrapper>>> _pawns;
 	
 	void FindOpenSpace();
-	void MoveIntoSpace(AIPawnWrapper *);
+	void MoveIntoSpace(AIPawnWrapper *, float timeDelta);
 
-	bool MoveLeft(AIPawn *);
-	bool MoveRight(AIPawn *);
-	bool MoveUp(AIPawn *);
-	bool MoveDown(AIPawn *);
+	bool MoveLeft(AIPawn *, float timeDelta);
+	bool MoveRight(AIPawn *, float timeDelta);
+	bool MoveUp(AIPawn *, float timeDelta);
+	bool MoveDown(AIPawn *, float timeDelta);
 
 	std::unique_ptr<PhysicsSystem> _physics;
 

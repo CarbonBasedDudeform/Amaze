@@ -41,7 +41,7 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 		}
 
 		//and move
-		MoveIntoSpace((*iter).get());
+		MoveIntoSpace((*iter).get(), timeDelta);
 	}
 }
 
@@ -84,41 +84,41 @@ Intention AIController::DecideIntent(Intention previousIntent) {
 void AIController::FindOpenSpace() {
 }
 
-void AIController::MoveIntoSpace(AIPawnWrapper * wrapper) {
-	if (wrapper->MyIntention.Left) MoveLeft(wrapper->pawn);
-	if (wrapper->MyIntention.Right) MoveRight(wrapper->pawn);
-	if (wrapper->MyIntention.Up) MoveUp(wrapper->pawn);
-	if (wrapper->MyIntention.Down) MoveDown(wrapper->pawn);
+void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
+	if (wrapper->MyIntention.Left) MoveLeft(wrapper->pawn, timeDelta);
+	if (wrapper->MyIntention.Right) MoveRight(wrapper->pawn, timeDelta);
+	if (wrapper->MyIntention.Up) MoveUp(wrapper->pawn, timeDelta);
+	if (wrapper->MyIntention.Down) MoveDown(wrapper->pawn, timeDelta);
 }
 
-bool AIController::MoveLeft(AIPawn * pawn) {
+bool AIController::MoveLeft(AIPawn * pawn, float timeDelta) {
 	auto blockedDirs = _physics->IsColliding(pawn);
 	if (blockedDirs.Left) return false;
 
-	pawn->WorldX -= _speed;
+	pawn->WorldX -= _speed * timeDelta;
 	return true;
 }
 
-bool AIController::MoveRight(AIPawn * pawn) {
+bool AIController::MoveRight(AIPawn * pawn, float timeDelta) {
 	auto blockedDirs = _physics->IsColliding(pawn);
 	if (blockedDirs.Right) return false;
 
-	pawn->WorldX += _speed;
+	pawn->WorldX += _speed * timeDelta;
 	return true;
 }
 
-bool AIController::MoveUp(AIPawn * pawn) {
+bool AIController::MoveUp(AIPawn * pawn, float timeDelta) {
 	auto blockedDirs = _physics->IsColliding(pawn);
 	if (blockedDirs.Up) return false;
 
-	pawn->WorldY -= _speed;
+	pawn->WorldY -= _speed * timeDelta;
 	return true;
 }
 
-bool AIController::MoveDown(AIPawn * pawn) {
+bool AIController::MoveDown(AIPawn * pawn, float timeDelta) {
 	auto blockedDirs = _physics->IsColliding(pawn);
 	if (blockedDirs.Down) return false;
 
-	pawn->WorldY += _speed;
+	pawn->WorldY += _speed * timeDelta;
 	return true;
 }
