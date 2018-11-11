@@ -15,6 +15,6 @@ public:
 	virtual ~GameState();
 	virtual void Init(GameStateOptions opts) {}
 	virtual void Render(sf::RenderWindow * window) = 0;
-	virtual void ProcessInput() = 0;
+	virtual void ProcessInput(float delta) = 0;
 	virtual GameState * Update() = 0;
 };

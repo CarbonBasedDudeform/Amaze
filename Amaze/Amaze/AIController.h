@@ -51,7 +51,7 @@ class AIController :
 public:
 	AIController(std::vector<AIPawn *> *, int);
 	~AIController();
-	void Process(BlockedDirections) override;
+	void Process(BlockedDirections, float timeDelta) override;
 
 private:
 	std::vector<AIPawnWrapper *> * _pawns;

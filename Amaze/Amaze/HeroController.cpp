@@ -20,41 +20,41 @@ void HeroController::UpdateView(){
 	_view->setCenter(sf::Vector2f(_pawn->WorldX, _pawn->WorldY));
 }
 
-void HeroController::MoveLeft() {
-	_pawn->WorldX -= _speed;
+void HeroController::MoveLeft(float timeDelta) {
+	_pawn->WorldX -= _speed * timeDelta;
 	UpdateView();
 }
 
-void HeroController::MoveRight() {
-	_pawn->WorldX += _speed;
+void HeroController::MoveRight(float timeDelta) {
+	_pawn->WorldX += _speed * timeDelta;
 	UpdateView();
 }
 
-void HeroController::MoveDown() {
-	_pawn->WorldY += _speed;
+void HeroController::MoveDown(float timeDelta) {
+	_pawn->WorldY += _speed * timeDelta;
 	UpdateView();
 }
 
-void HeroController::MoveUp() {
-	_pawn->WorldY -= _speed;
+void HeroController::MoveUp(float timeDelta) {
+	_pawn->WorldY -= _speed * timeDelta;
 	UpdateView();
 }
 
-void HeroController::Process(BlockedDirections blocked) {
+void HeroController::Process(BlockedDirections blocked, float timeDelta) {
 	if (!blocked.Left && ( sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) ) )
 	{
-		MoveLeft();
+		MoveLeft(timeDelta);
 	}
 	if (!blocked.Right && (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)))
 	{
-		MoveRight();
+		MoveRight(timeDelta);
 	}
 	if (!blocked.Up && (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)))
 	{
-		MoveUp();
+		MoveUp(timeDelta);
 	}
 	if (!blocked.Down && (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)))
 	{
-		MoveDown();
+		MoveDown(timeDelta);
 	}
 }

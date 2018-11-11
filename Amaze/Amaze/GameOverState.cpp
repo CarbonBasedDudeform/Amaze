@@ -18,6 +18,6 @@ void GameOverState::Render(sf::RenderWindow * window) {
 	//render code
 }
 
-void GameOverState::ProcessInput() {
+void GameOverState::ProcessInput(float delta) {
 
 }

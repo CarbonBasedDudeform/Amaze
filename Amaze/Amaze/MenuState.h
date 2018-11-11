@@ -10,7 +10,7 @@ public:
 	~MenuState();
 	void Init(GameStateOptions opt) override;
 	void Render(sf::RenderWindow * window) override;
-	void ProcessInput() override;
+	void ProcessInput(float delta) override;
 	GameState * Update() override;
 private:
 	GameState * _nextState;

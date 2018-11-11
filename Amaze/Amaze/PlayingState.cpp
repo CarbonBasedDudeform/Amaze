@@ -410,14 +410,14 @@ void PlayingState::Render(sf::RenderWindow * window) {
 	*/
 }
 
-void PlayingState::ProcessInput() {
+void PlayingState::ProcessInput(float delta) {
 	bool leftBlocked = false;
 	bool rightBlocked = false;
 	bool topBlocked = false;
 	bool bottomBlocked = false;
 
 	auto blocked = _physics->IsColliding(_hero.get());
-	_heroController->Process(blocked);
+	_heroController->Process(blocked, delta);
 
 	//_terrorsController->Think();
 }

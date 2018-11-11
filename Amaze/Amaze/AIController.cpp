@@ -25,7 +25,7 @@ AIController::~AIController()
 {
 }
 
-void AIController::Process(BlockedDirections blocked) {
+void AIController::Process(BlockedDirections blocked, float timeDelta) {
 	//std::cout << "AI thinking..." << std::endl;
 	//for each pawn
 		//decide intent

@@ -18,6 +18,6 @@ void LevelTransistionState::Render(sf::RenderWindow * window) {
 	//render code
 }
 
-void LevelTransistionState::ProcessInput() {
+void LevelTransistionState::ProcessInput(float delta) {
 
 }

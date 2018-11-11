@@ -28,12 +28,16 @@ void Game::Loop()
 			if (event.type == sf::Event::Closed)
 				_window->close();
 		}
+		auto now = _clock.now();
+		std::chrono::duration<float> timeDelta = now - _lastUpdate;
+		float delta = timeDelta.count() * 1000;
 		_curGameState = _curGameState->Update();
 		//check user input
-		_curGameState->ProcessInput();
+		_curGameState->ProcessInput(delta);
 		//render
 		_window->clear();
 		_curGameState->Render(_window.get());
 		_window->display();
+		_lastUpdate = now;
 	}
 }

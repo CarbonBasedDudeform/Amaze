@@ -8,6 +8,6 @@ public:
 	~LevelTransistionState();
 	void Init(GameStateOptions opts) override;
 	void Render(sf::RenderWindow * window) override;
-	void ProcessInput() override;
+	void ProcessInput(float delta) override;
 };
 
