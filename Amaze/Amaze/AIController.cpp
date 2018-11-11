@@ -1,19 +1,19 @@
 #include "AIController.h"
 
 
-AIController::AIController(std::vector<AIPawn *> * pawns, int mazeSize)
+AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, int mazeSize)
 {
-	_pawns = new std::vector<AIPawnWrapper *>();
+	_pawns = std::make_unique<std::vector<std::unique_ptr<AIPawnWrapper>>>();
 
 	for (auto iter = pawns->begin(); iter != pawns->end(); iter++)
 	{
-		auto temp = new AIPawnWrapper();
-		temp->pawn = (*iter);
-		_pawns->push_back(temp);
+		auto temp = std::make_unique<AIPawnWrapper>();
+		temp->pawn = (*iter).get();
+		_pawns->push_back(std::move(temp));
 	}
 
 	_speed = 0.5f;
-	_heroLocation = new Belief();
+	_heroLocation = std::make_unique<Belief>();
 	_heroLocation->X = rand() % mazeSize;
 	_heroLocation->Y = rand() % mazeSize;
 	_heroLocation->WorldX = (_heroLocation->X * GridBlock::WALL_LENGTH) + GridBlock::WALL_LENGTH / 2; //this is the equation to calculate world pos, the offset is the grid position * the length of a wall, plus half for the centre of the wall
@@ -41,7 +41,7 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 		}
 
 		//and move
-		MoveIntoSpace((*iter));
+		MoveIntoSpace((*iter).get());
 	}
 }
 

@@ -33,7 +33,7 @@ void AIPawn::Render(sf::RenderWindow * window)
 
 #if _DEBUG
 	sf::CircleShape circle(Size);
-	circle.setFillColor(sf::Color::Green);
+	circle.setFillColor(sf::Color::Blue);
 	circle.setPosition(WorldX - _offset, WorldY - _offset);
 	window->draw(circle);
 #endif

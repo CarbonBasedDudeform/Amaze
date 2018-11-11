@@ -54,3 +54,5 @@ Amaze/.vs/Amaze/v15/*
 *.idb
 *.ilk
 *.exe
+*.xml
+*.lastcodeanalysissucceeded

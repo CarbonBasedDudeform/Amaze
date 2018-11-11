@@ -7,9 +7,9 @@ PlayingState::PlayingState()
 	_hero = std::make_unique<HeroPawn>();
 	_physics = std::make_unique<PhysicsSystem>();
 	_maze = std::make_unique<Maze>(_physics.get());
-	//_terrors = new std::vector<AIPawn *>();
-	//_terrors->push_back(new AIPawn());
-	//_terrors->push_back(new AIPawn());
+	_terrors = std::make_unique<std::vector<std::unique_ptr<AIPawn>>>();
+	_terrors->push_back(std::make_unique<AIPawn>());
+	_terrors->push_back(std::make_unique<AIPawn>());
 
 	_placedAI = 0;
 }
@@ -29,7 +29,7 @@ void PlayingState::Init(PlayingStateOptions opts) {
 	//:::::::::::::::IMPORTANT::::::::::::::: HeroController is created here so that the camera can be focused on the hero pawn correctly.
 	//										 aka, herocontroller needs to be created after the pawns WorldX and Y have been set
 	_heroController = std::make_unique<HeroController>(_hero.get());
-	//_terrorsController = new AIController(_terrors, mazeSize);
+	_terrorsController = std::make_unique<AIController>(_terrors.get(), _maze->GetSize());
 }
 
 const float PlayingState::BUBBLE_SIZE = 300.0f;
@@ -41,12 +41,11 @@ void PlayingState::Render(sf::RenderWindow * window) {
 	_maze->Render(window, BUBBLE_SIZE, _hero.get());
 	_hero->Render(window);
 
-	/*
+	
 	for (auto iter = _terrors->begin(); iter != _terrors->end(); iter++)
 	{
 		(*iter)->Render(window);
 	}
-	*/
 }
 
 void PlayingState::ProcessInput(float delta) {
@@ -58,7 +57,7 @@ void PlayingState::ProcessInput(float delta) {
 	auto blocked = _physics->IsColliding(_hero.get());
 	_heroController->Process(blocked, delta);
 
-	//_terrorsController->Think();
+	_terrorsController->Process(blocked, delta);
 }
 
 GameState * PlayingState::Update()

@@ -4,6 +4,7 @@
 #include "PhysicsSystem.h"
 #include "GridBlock.h"
 
+#include <memory>
 #include <vector>
 
 /*
@@ -49,12 +50,12 @@ class AIController :
 	public Controller
 {
 public:
-	AIController(std::vector<AIPawn *> *, int);
+	AIController(std::vector<std::unique_ptr<AIPawn>> *, int);
 	~AIController();
 	void Process(BlockedDirections, float timeDelta) override;
 
 private:
-	std::vector<AIPawnWrapper *> * _pawns;
+	std::unique_ptr<std::vector<std::unique_ptr<AIPawnWrapper>>> _pawns;
 	
 	void FindOpenSpace();
 	void MoveIntoSpace(AIPawnWrapper *);
@@ -66,7 +67,7 @@ private:
 
 	std::unique_ptr<PhysicsSystem> _physics;
 
-	Belief * _heroLocation;
+	std::unique_ptr<Belief> _heroLocation;
 	Intention DecideIntent(Intention);
 };
 

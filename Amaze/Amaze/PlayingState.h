@@ -40,8 +40,8 @@ private:
 	std::unique_ptr<HeroController> _heroController;
 
 	//The Terrors (The T errors)
-	std::vector<AIPawn *> * _terrors;
-	AIController * _terrorsController;
+	std::unique_ptr<std::vector<std::unique_ptr<AIPawn>>> _terrors;
+	std::unique_ptr<AIController> _terrorsController;
 	int _placedAI;
 
 	static const float BUBBLE_SIZE;
