@@ -26,7 +26,7 @@ public:
 	float FindDistance(float, float, Pawn*);
 
 	void AddCollidable(Pawn *);
-	void CleanUp(Pawn *);
+	void RemoveCollidable(Pawn *);
 	void Reset();
 private:
 

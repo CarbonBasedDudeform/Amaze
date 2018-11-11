@@ -106,7 +106,7 @@ void PlayingState::CreateFinish(int x, int y)
 	//mak = multidimension array hack
 	_finishPoint = MultiHack(x, y);
 	_finishPoint->MakeFinish();
-	_physics->CleanUp(_finishPoint);
+	_physics->RemoveCollidable(_finishPoint);
 }
 
 void PlayingState::CreateFauxRoutes(unsigned int amount) {
@@ -166,7 +166,7 @@ std::unique_ptr<GridLocation> PlayingState::CreateDeadend(GridLocation & finish)
 	auto cached = MultiHack(temp->X, temp->Y);
 	//make the deadend empty
 	cached->Enable(false);
-	_physics->CleanUp(cached);
+	_physics->RemoveCollidable(cached);
 	//place the AIs (the terrors) at the deadends
 	/*
 	if (_placedAI != _terrors->size())
@@ -210,7 +210,7 @@ void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 	if (a.X < b.X ) {
 		auto block = MultiHack(a.X, a.Y);
 		block->Enable(false);
-		_physics->CleanUp(block);
+		_physics->RemoveCollidable(block);
 		GridLocation temp;
 		temp.X = a.X + 1;
 		temp.Y = a.Y;
@@ -218,7 +218,7 @@ void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 	} else if (a.X > b.X) {
 		auto block = MultiHack(a.X, a.Y);
 		block->Enable(false);
-		_physics->CleanUp(block);
+		_physics->RemoveCollidable(block);
 		GridLocation temp;
 		temp.X = a.X - 1;
 		temp.Y = a.Y;
@@ -226,7 +226,7 @@ void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 	}else if (a.Y < b.Y) {
 		auto block = MultiHack(a.X, a.Y);
 		block->Enable(false);
-		_physics->CleanUp(block);
+		_physics->RemoveCollidable(block);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y + 1;
@@ -235,7 +235,7 @@ void PlayingState::CreateRoute(GridLocation a, GridLocation b)
 	{
 		auto block = MultiHack(a.X, a.Y);
 		block->Enable(false);
-		_physics->CleanUp(block);
+		_physics->RemoveCollidable(block);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y - 1;

@@ -21,7 +21,7 @@ void PhysicsSystem::AddCollidable(Pawn * pawn)
 	_collidables->push_back(pawn);
 }
 
-void PhysicsSystem::CleanUp(Pawn * pawn) {
+void PhysicsSystem::RemoveCollidable(Pawn * pawn) {
 	
 	for (int i = 0; i < _collidables->size(); i++){
 		//if collidable[i] points to the same memory location as the pawn they're the same thing
