@@ -25,14 +25,12 @@ void Maze::GenerateMaze(int size) {
 				auto gridBlock = std::make_unique<GridBlock>(j, i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i);
 				gridBlock->Colour = sf::Color(255, 0, 0);
 				gridBlock->RenderColour = gridBlock->Colour;
-				_physics->AddCollidable(gridBlock.get());
 				_maze->push_back(std::move(gridBlock));
 			}
 			else
 			{
 				auto block = MultiHack(i, j);
 				block->Enable(true);
-				_physics->AddCollidable(block);
 			}
 		}
 	}
@@ -77,6 +75,8 @@ void Maze::CreateStart(int x, int y)
 	//mak = multidimension array hack, allows access to the deque in a way similar to accessing a 2d array
 	_startPoint = MultiHack(x, y);
 	_startPoint->MakeStart();
+	DetectCollidibles(*_startPoint);
+	_physics->RemoveCollidable(_startPoint);
 }
 
 void Maze::CreateFinish(int x, int y)
@@ -84,6 +84,7 @@ void Maze::CreateFinish(int x, int y)
 	//mak = multidimension array hack
 	_finishPoint = MultiHack(x, y);
 	_finishPoint->MakeFinish();
+	DetectCollidibles(*_finishPoint);
 	_physics->RemoveCollidable(_finishPoint);
 }
 
@@ -147,6 +148,7 @@ std::unique_ptr<GridLocation> Maze::CreateDeadend(GridLocation & finish) {
 	auto cached = MultiHack(temp->X, temp->Y);
 	//make the deadend empty
 	cached->Enable(false);
+	DetectCollidibles(*cached);
 	_physics->RemoveCollidable(cached);
 	return temp;
 }
@@ -163,6 +165,7 @@ void Maze::CreateRoute(GridLocation a, GridLocation b)
 	if (a.X < b.X) {
 		auto block = MultiHack(a.X, a.Y);
 		block->Enable(false);
+		DetectCollidibles(*block);
 		_physics->RemoveCollidable(block);
 		GridLocation temp;
 		temp.X = a.X + 1;
@@ -172,6 +175,7 @@ void Maze::CreateRoute(GridLocation a, GridLocation b)
 	else if (a.X > b.X) {
 		auto block = MultiHack(a.X, a.Y);
 		block->Enable(false);
+		DetectCollidibles(*block);
 		_physics->RemoveCollidable(block);
 		GridLocation temp;
 		temp.X = a.X - 1;
@@ -181,6 +185,7 @@ void Maze::CreateRoute(GridLocation a, GridLocation b)
 	else if (a.Y < b.Y) {
 		auto block = MultiHack(a.X, a.Y);
 		block->Enable(false);
+		DetectCollidibles(*block);
 		_physics->RemoveCollidable(block);
 		GridLocation temp;
 		temp.X = a.X;
@@ -191,6 +196,7 @@ void Maze::CreateRoute(GridLocation a, GridLocation b)
 	{
 		auto block = MultiHack(a.X, a.Y);
 		block->Enable(false);
+		DetectCollidibles(*block);
 		_physics->RemoveCollidable(block);
 		GridLocation temp;
 		temp.X = a.X;
@@ -206,10 +212,7 @@ void Maze::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//right
 	auto xplus1 = MultiHack(a.X + 1, a.Y);
-	if (xplus1 != nullptr && !xplus1->IsStart() && !xplus1->IsFinish()) {
-		_physics->AddCollidable(xplus1);
-		xplus1->IsCollidable();
-	}
+	MakeCollide(xplus1);
 
 	// _____________
 	// |___|___|___|
@@ -217,10 +220,7 @@ void Maze::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//left
 	auto xminus1 = MultiHack(a.X - 1, a.Y);
-	if (xminus1 != nullptr && !xminus1->IsStart() && !xminus1->IsFinish()) {
-		_physics->AddCollidable(xminus1);
-		xminus1->IsCollidable();
-	}
+	MakeCollide(xminus1);
 
 	// _____________
 	// |___|_#_|___|
@@ -228,10 +228,7 @@ void Maze::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//up
 	auto yplus1 = MultiHack(a.X, a.Y + 1);
-	if (yplus1 != nullptr && !yplus1->IsStart() && !yplus1->IsFinish()) {
-		_physics->AddCollidable(yplus1);
-		yplus1->IsCollidable();
-	}
+	MakeCollide(yplus1);
 
 	// _____________
 	// |___|___|___|
@@ -239,22 +236,14 @@ void Maze::DetectCollidibles(GridBlock & a) {
 	// |___|_#_|___|
 	//down
 	auto yminus1 = MultiHack(a.X, a.Y - 1);
-	if (yminus1 != nullptr && !yminus1->IsStart() && !yminus1->IsFinish()) {
-		_physics->AddCollidable(yminus1);
-		yminus1->IsCollidable();
-	}
-
+	MakeCollide(yminus1);
 	// _____________
 	// |_#_|___|___|
 	// |___|_a_|___|
 	// |___|___|___|
 	//up and left
 	auto upleft = MultiHack(a.X - 1, a.Y + 1);
-	if (upleft != nullptr && !upleft->IsStart() && !upleft->IsFinish())
-	{
-		_physics->AddCollidable(upleft);
-		upleft->IsCollidable();
-	}
+	MakeCollide(upleft);
 
 	// _____________
 	// |___|___|_#_|
@@ -262,11 +251,7 @@ void Maze::DetectCollidibles(GridBlock & a) {
 	// |___|___|___|
 	//up and right
 	auto upright = MultiHack(a.X + 1, a.Y + 1);
-	if (upright != nullptr && !upright->IsStart() && !upright->IsFinish())
-	{
-		_physics->AddCollidable(upright);
-		upright->IsCollidable();
-	}
+	MakeCollide(upright);
 
 	// _____________
 	// |___|___|___|
@@ -274,11 +259,7 @@ void Maze::DetectCollidibles(GridBlock & a) {
 	// |___|___|_#_|
 	//down and right
 	auto downright = MultiHack(a.X + 1, a.Y - 1);
-	if (downright != nullptr && !downright->IsStart() && !downright->IsFinish())
-	{
-		_physics->AddCollidable(downright);
-		downright->IsCollidable();
-	}
+	MakeCollide(downright);
 
 	// _____________
 	// |___|___|___|
@@ -286,11 +267,8 @@ void Maze::DetectCollidibles(GridBlock & a) {
 	// |_#_|___|___|
 	//down and left
 	auto downleft = MultiHack(a.X - 1, a.Y - 1);
-	if (downleft != nullptr && !downleft->IsStart() && !downleft->IsFinish())
-	{
-		_physics->AddCollidable(downleft);
-		downleft->IsCollidable();
-	}
+	MakeCollide(downleft);
+	
 }
 
 // Checks to see if the given locations meet the required constrains
@@ -377,4 +355,12 @@ float Maze::DistanceToHero(Pawn * pawn, Pawn * hero)
 int Maze::CalcRandomPoint() const
 {
 	return 1 + rand() % (_size - 2);
+}
+
+void Maze::MakeCollide(GridBlock * block)
+{
+	if (block != nullptr && !block->IsStart() && !block->IsFinish() && block->IsEnabled()) {
+		_physics->AddCollidable(block);
+		block->IsCollidable();
+	}
 }

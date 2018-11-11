@@ -38,5 +38,6 @@ private:
 	void DetectCollidibles(GridBlock &);
 	float DistanceToHero(Pawn*, Pawn*);
 	int CalcRandomPoint() const;
+	void MakeCollide(GridBlock * block);
 };
 

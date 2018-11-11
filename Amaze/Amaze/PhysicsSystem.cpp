@@ -13,6 +13,8 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::AddCollidable(Pawn * pawn)
 {
+	if (pawn == nullptr) return;
+
 	//update this to a better container
 	for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
 	{

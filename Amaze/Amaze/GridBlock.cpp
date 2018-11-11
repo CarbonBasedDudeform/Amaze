@@ -68,4 +68,6 @@ void GridBlock::MakeFinish() {
 
 void GridBlock::IsCollidable() {
 	_block->setFillColor(sf::Color::White);
+	Colour = sf::Color::White;
+	RenderColour = sf::Color::White;
 }
