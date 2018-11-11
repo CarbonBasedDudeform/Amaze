@@ -25,13 +25,11 @@ void PhysicsSystem::RemoveCollidable(Pawn * pawn) {
 	
 	for (int i = 0; i < _collidables->size(); i++){
 		//if collidable[i] points to the same memory location as the pawn they're the same thing
-		if (&(*(_collidables->at(i))) == &(*pawn)) {
+		if (_collidables->at(i) == pawn) {
 			_collidables->erase(_collidables->begin() + i);
 			return;
 		}
 	}
-
-	//_collidables->clear();
 }
 
 void PhysicsSystem::Reset()
