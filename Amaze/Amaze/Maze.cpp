@@ -163,30 +163,21 @@ void Maze::CreateRoute(GridLocation a, GridLocation b)
 	if (a.Y > _size) a.Y = 0;
 
 	if (a.X < b.X) {
-		auto block = MultiHack(a.X, a.Y);
-		block->Enable(false);
-		DetectCollidibles(*block);
-		_physics->RemoveCollidable(block);
+		MarkPath(a.X, a.Y);
 		GridLocation temp;
 		temp.X = a.X + 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
 	}
 	else if (a.X > b.X) {
-		auto block = MultiHack(a.X, a.Y);
-		block->Enable(false);
-		DetectCollidibles(*block);
-		_physics->RemoveCollidable(block);
+		MarkPath(a.X, a.Y);
 		GridLocation temp;
 		temp.X = a.X - 1;
 		temp.Y = a.Y;
 		CreateRoute(temp, b);
 	}
 	else if (a.Y < b.Y) {
-		auto block = MultiHack(a.X, a.Y);
-		block->Enable(false);
-		DetectCollidibles(*block);
-		_physics->RemoveCollidable(block);
+		MarkPath(a.X, a.Y);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y + 1;
@@ -194,10 +185,7 @@ void Maze::CreateRoute(GridLocation a, GridLocation b)
 	}
 	else if (a.Y > b.Y)
 	{
-		auto block = MultiHack(a.X, a.Y);
-		block->Enable(false);
-		DetectCollidibles(*block);
-		_physics->RemoveCollidable(block);
+		MarkPath(a.X, a.Y);
 		GridLocation temp;
 		temp.X = a.X;
 		temp.Y = a.Y - 1;
@@ -363,4 +351,12 @@ void Maze::MakeCollide(GridBlock * block)
 		_physics->AddCollidable(block);
 		block->IsCollidable();
 	}
+}
+
+void Maze::MarkPath(int x, int y
+{
+	auto block = MultiHack(x ,y);
+	block->Enable(false);
+	DetectCollidibles(*block);
+	_physics->RemoveCollidable(block);
 }

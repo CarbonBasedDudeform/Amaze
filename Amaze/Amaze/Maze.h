@@ -39,5 +39,6 @@ private:
 	float DistanceToHero(Pawn*, Pawn*);
 	int CalcRandomPoint() const;
 	void MakeCollide(GridBlock * block);
+	void MarkPath(GridBlock * block);
 };
 
