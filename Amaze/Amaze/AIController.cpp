@@ -83,11 +83,15 @@ Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousInt
 	{
 		intent.Up = false;
 		intent.Down = true;
+	}
+	else if (blocked.Up.Distance == blocked.Down.Distance)
+	{
 		if (!previousIntent.Up && !previousIntent.Down)
 		{
 			previousIntent.Down = true;
 		}
 		intent.Up = previousIntent.Up;
+		intent.Down = previousIntent.Down;
 	}
 
 	return intent;
