@@ -30,6 +30,7 @@ GridBlock * PlayingState::MultiHack(int x, int y)
 {
 	if ((x + (y * _size)) >= (_size*_size)) return nullptr;
 	if ((x + (y*_size)) < 0) return nullptr;
+	if (_maze->empty()) return nullptr;
 
 	return _maze->at(x + (y * _size)).get();
 }
@@ -38,15 +39,24 @@ GridBlock * PlayingState::MultiHack(int x, int y)
 void PlayingState::GenerateMaze(int size) {
 	_size = size; //private member other functions can access for the maze size, saves passing in repeatedly as an argument
 	//our return list containing all the walls
-	_maze = std::make_unique<std::vector<std::unique_ptr<GridBlock>>>();
+	if (_maze == nullptr) _maze = std::make_unique<std::vector<std::unique_ptr<GridBlock>>>();
+
 	//populate
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < size; ++j) {
-			auto gridBlock = std::make_unique<GridBlock>(j, i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i);
-			gridBlock->Colour = sf::Color(255, 0, 0);
-			gridBlock->RenderColour = gridBlock->Colour;
-			_physics->AddCollidable(gridBlock.get());
-			_maze->push_back(std::move(gridBlock));
+			if (i * j <= _maze->size()) {
+				auto gridBlock = std::make_unique<GridBlock>(j, i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i);
+				gridBlock->Colour = sf::Color(255, 0, 0);
+				gridBlock->RenderColour = gridBlock->Colour;
+				_physics->AddCollidable(gridBlock.get());
+				_maze->push_back(std::move(gridBlock));
+			}
+			else
+			{
+				auto block = MultiHack(i, j);
+				block->Enable(true);
+				_physics->AddCollidable(block);
+			}
 		}
 	}
 
@@ -376,7 +386,7 @@ float PlayingState::DistanceToHero(Pawn * pawn)
 	return sqrtf( (x*x) + (y*y) );
 }
 
-const float PlayingState::BUBBLE_SIZE = 150.0f;
+const float PlayingState::BUBBLE_SIZE = 300.0f;
 
 void PlayingState::Render(sf::RenderWindow * window) {
 
