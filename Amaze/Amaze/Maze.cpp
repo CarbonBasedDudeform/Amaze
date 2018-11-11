@@ -353,7 +353,7 @@ void Maze::MakeCollide(GridBlock * block)
 	}
 }
 
-void Maze::MarkPath(int x, int y
+void Maze::MarkPath(int x, int y)
 {
 	auto block = MultiHack(x ,y);
 	block->Enable(false);
