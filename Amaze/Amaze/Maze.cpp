@@ -58,11 +58,11 @@ void Maze::CreateStartAndFinishLocations(GridLocation &start, GridLocation &fini
 	//try to find a satisfactory start and finish position
 	//satisfactory = distance between the two is >= MIN_DISTANCE
 	for (int i = 0; i < MAX_ATTEMPTS; i++) {
-		start.X = rand() % _size;
-		start.Y = rand() % _size;
+		start.X = CalcRandomPoint();
+		start.Y = CalcRandomPoint();
 		//possible save cpu by doing start once and then just varying finish?
-		finish.X = rand() % _size;
-		finish.Y = rand() % _size;
+		finish.X = CalcRandomPoint();
+		finish.Y = CalcRandomPoint();
 
 		if (MeetsConstraints(start, finish))
 		{
@@ -135,8 +135,8 @@ std::unique_ptr<GridLocation> Maze::CreateDeadend(GridLocation & finish) {
 	temp->X = temp->Y = 0;
 
 	for (int i = 0; i < MAX_ATTEMPTS; i++) {
-		temp->X = rand() % _size;
-		temp->Y = rand() % _size;
+		temp->X = CalcRandomPoint();
+		temp->Y = CalcRandomPoint();
 
 		if (MeetsConstraints(*temp, finish)) {
 			//done
@@ -296,7 +296,7 @@ void Maze::DetectCollidibles(GridBlock & a) {
 // Checks to see if the given locations meet the required constrains
 bool Maze::MeetsConstraints(GridLocation & one, GridLocation & two)
 {
-	const int MIN_DISTANCE = _size / 2;
+	const int MIN_DISTANCE = (_size - 2) / 2;
 
 	if (FindDistance(one, two) >= MIN_DISTANCE) {
 		return true;
@@ -372,4 +372,9 @@ float Maze::DistanceToHero(Pawn * pawn, Pawn * hero)
 	float y = hero->WorldY - pawn->WorldY;
 
 	return sqrtf((x*x) + (y*y));
+}
+
+int Maze::CalcRandomPoint() const
+{
+	return 1 + rand() % (_size - 2);
 }

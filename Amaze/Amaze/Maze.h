@@ -37,5 +37,6 @@ private:
 	GridBlock * MultiHack(int, int); //util method for accessing the vector like a 2D array
 	void DetectCollidibles(GridBlock &);
 	float DistanceToHero(Pawn*, Pawn*);
+	int CalcRandomPoint() const;
 };
 
