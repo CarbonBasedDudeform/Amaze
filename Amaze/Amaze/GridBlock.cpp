@@ -3,32 +3,24 @@
 const int GridBlock::WALL_LENGTH;
 
 GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
+	: _IsStart(false),
+	_IsFinish(false),
+	_display(true),
+	_xOffset(xOffset),
+	_yOffset(yOffset)
 {
 	//Pawn Props
 	WorldX = xOffset + WALL_LENGTH / 2;
 	WorldY = yOffset + WALL_LENGTH / 2;
 	Size = WALL_LENGTH;
 
-	_xOffset = xOffset;
-	_yOffset = yOffset;
 	X = x;
 	Y = y;
 
 	//left wall stuff
-	_block = new sf::RectangleShape(sf::Vector2f(GridBlock::WALL_LENGTH, GridBlock::WALL_LENGTH));
+	_block = std::make_unique<sf::RectangleShape>(sf::Vector2f(GridBlock::WALL_LENGTH, GridBlock::WALL_LENGTH));
 	_block->setFillColor(sf::Color::Red);
 	_block->setPosition(sf::Vector2f(xOffset + X, yOffset + Y));
-	_display = true;
-
-	//default to neither start nor finish
-	_IsStart = false;
-	_IsFinish = false;
-}
-
-
-GridBlock::~GridBlock()
-{
-	delete _block;
 }
 
 void GridBlock::Render(sf::RenderWindow * window)

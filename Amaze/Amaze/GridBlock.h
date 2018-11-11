@@ -1,6 +1,7 @@
 #pragma once
 #include "Pawn.h"
 #include <SFML\Graphics.hpp>
+#include <memory>
 
 struct GridLocation {
 	int X;
@@ -13,7 +14,6 @@ public:
 	static const int WALL_LENGTH = 50;
 
 	GridBlock(int,int,int,int);
-	~GridBlock();
 	int X;
 	int Y;
 
@@ -32,7 +32,7 @@ private:
 	int _xOffset;
 	int _yOffset;
 
-	sf::RectangleShape * _block;
+	std::unique_ptr<sf::RectangleShape> _block;
 
 	bool _display;
 
