@@ -1,29 +1,16 @@
 #include "Game.h"
+#include <cassert>
 
 sf::String Game::GAME_TITLE = "Amaze";
 
-Game * Game::_instance = nullptr;
-Game * Game::GetInstance()
-{
-	//Not safe if multithreading every gets implemented
-	if (_instance) return _instance;
-	else _instance = new Game();
-
-	return _instance;
-}
-
+int Game::_count = 0;
 Game::Game()
 {
-	_window = new sf::RenderWindow(sf::VideoMode(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT), GAME_TITLE);
+	_window = std::make_unique< sf::RenderWindow>(sf::VideoMode(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT), GAME_TITLE);
 	_curGameState = new MenuState();
-}
-
-
-Game::~Game()
-{
-	delete _window;
-	delete _curGameState;
-}
+	++_count;
+	assert(_count <= 1);
+}  
 
 bool Game::Init()
 {
@@ -42,12 +29,11 @@ void Game::Loop()
 				_window->close();
 		}
 		_curGameState = _curGameState->Update();
-
 		//check user input
 		_curGameState->ProcessInput();
 		//render
 		_window->clear();
-		_curGameState->Render(_window);
+		_curGameState->Render(_window.get());
 		_window->display();
 	}
 }

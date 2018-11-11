@@ -18,7 +18,7 @@ AIController::AIController(std::vector<AIPawn *> * pawns, int mazeSize)
 	_heroLocation->Y = rand() % mazeSize;
 	_heroLocation->WorldX = (_heroLocation->X * GridBlock::WALL_LENGTH) + GridBlock::WALL_LENGTH / 2; //this is the equation to calculate world pos, the offset is the grid position * the length of a wall, plus half for the centre of the wall
 	_heroLocation->WorldY = (_heroLocation->Y * GridBlock::WALL_LENGTH) + GridBlock::WALL_LENGTH / 2;
-	_physics = PhysicsSystem::GetInstance();
+	_physics = std::make_unique<PhysicsSystem>();
 }
 
 AIController::~AIController()

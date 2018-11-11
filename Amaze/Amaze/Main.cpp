@@ -1,8 +1,9 @@
 #include "Game.h"
+#include <memory>
 
 int main()
 {
-	Game * game = Game::GetInstance();
+	auto game = std::make_unique<Game>();
 	game->Init();
 	game->Loop();
 

@@ -16,7 +16,7 @@ public:
 class PhysicsSystem
 {
 public:
-	static PhysicsSystem * GetInstance();
+	PhysicsSystem();
 	~PhysicsSystem();
 	
 	BlockedDirections IsColliding(Pawn*);
@@ -29,8 +29,7 @@ public:
 	void CleanUp(Pawn *);
 	void Reset();
 private:
-	static PhysicsSystem * _instance;
-	PhysicsSystem();
+
 
 	std::vector<Pawn *> * _collidables;
 };

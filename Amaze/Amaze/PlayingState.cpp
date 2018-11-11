@@ -1,11 +1,12 @@
 #include "PlayingState.h"
 
 PlayingState::PlayingState()
+	: _finishPoint(nullptr)
 {
 	//seed rand to make everything more unique for each playingstate
 	srand((unsigned int)time(NULL));
-	_hero = new HeroPawn();
-	_physics = PhysicsSystem::GetInstance();
+	_hero = std::make_unique<HeroPawn>();
+	_physics = std::make_unique<PhysicsSystem>();
 
 	//_terrors = new std::vector<AIPawn *>();
 	//_terrors->push_back(new AIPawn());
@@ -17,8 +18,6 @@ PlayingState::PlayingState()
 
 PlayingState::~PlayingState()
 {
-	delete _hero;
-	delete _heroController;
 }
 
 void PlayingState::Init(PlayingStateOptions opts) {
@@ -32,27 +31,27 @@ GridBlock * PlayingState::MultiHack(int x, int y)
 	if ((x + (y * _size)) >= (_size*_size)) return nullptr;
 	if ((x + (y*_size)) < 0) return nullptr;
 
-	return _maze->at(x + (y * _size));
+	return _maze->at(x + (y * _size)).get();
 }
 
 //size is used to generate a maze of size by size dimension
 void PlayingState::GenerateMaze(int size) {
 	_size = size; //private member other functions can access for the maze size, saves passing in repeatedly as an argument
 	//our return list containing all the walls
-	_maze = new std::vector<GridBlock *>();
+	_maze = std::make_unique<std::vector<std::unique_ptr<GridBlock>>>();
 	//populate
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < size; ++j) {
-			auto gridBlock = new GridBlock(j, i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i);
+			auto gridBlock = std::make_unique<GridBlock>(j, i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i);
 			gridBlock->Colour = sf::Color(255, 0, 0);
 			gridBlock->RenderColour = gridBlock->Colour;
-			_maze->push_back(gridBlock);
-			_physics->AddCollidable(gridBlock);
+			_physics->AddCollidable(gridBlock.get());
+			_maze->push_back(std::move(gridBlock));
 		}
 	}
 
-	_start = new GridLocation();
-	_finish = new GridLocation();
+	_start = std::make_unique<GridLocation>();
+	_finish = std::make_unique<GridLocation>();
 	CreateStartAndFinishLocations(*_start, *_finish);
 	CreateStart(_start->X, _start->Y);
 	CreateFinish(_finish->X, _finish->Y);
@@ -99,7 +98,7 @@ void PlayingState::CreateStart(int x, int y)
 
 	//:::::::::::::::IMPORTANT::::::::::::::: HeroController is created here so that the camera can be focused on the hero pawn correctly.
 	//										 aka, herocontroller needs to be created after the pawns WorldX and Y have been set
-	_heroController = new HeroController(_hero);
+	_heroController = std::make_unique<HeroController>(_hero.get());
 }
 
 void PlayingState::CreateFinish(int x, int y)
@@ -111,24 +110,23 @@ void PlayingState::CreateFinish(int x, int y)
 }
 
 void PlayingState::CreateFauxRoutes(unsigned int amount) {
-	auto deadends = new std::vector<GridLocation *>();
+	std::vector<std::unique_ptr<GridLocation>> deadends;
 	//generate the given amount of routes
-	while (deadends->size() < amount) {
-		GridLocation * temp = CreateDeadend(*_start); //this should get refactored, complexity is growing, old code isn't being updated to reflect the changes
+	while (deadends.size() < amount) {
+		auto temp = CreateDeadend(*_start); //this should get refactored, complexity is growing, old code isn't being updated to reflect the changes
 		//deadends will be empty at first so just add the first generated value which meets contraints
-		if (deadends->size() < 1) {
-			deadends->push_back(temp);
+		if (deadends.size() < 1) {
+			deadends.push_back(std::move(temp));
 		}
 		else {
 			//make sure they are unique (ie. not the same as previously generated routes)
 			bool found = false;
-			for (unsigned int i = 0; i < deadends->size(); i++)
+			for (unsigned int i = 0; i < deadends.size(); i++)
 			{
-				if (deadends->at(i)->X == temp->X && deadends->at(i)->Y == temp->Y)
+				if (deadends.at(i)->X == temp->X && deadends.at(i)->Y == temp->Y)
 				{
 					//GridLocation is already a deadend
 					//start again
-					delete temp;
 					found = true;
 					break;
 				}
@@ -138,25 +136,21 @@ void PlayingState::CreateFauxRoutes(unsigned int amount) {
 				if (MeetsConstraints(*temp, *_start))
 				{
 					//if everything is cool, add it to the list
-					deadends->push_back(temp);
-				}
-				else {
-					//otherwise scrap it and start again
-					delete temp;
+					deadends.push_back(std::move(temp));
 				}
 			}
 		}
 	}
 
 	//create routes
-	for (unsigned int i = 0; i < deadends->size(); i++)
+	for (unsigned int i = 0; i < deadends.size(); i++)
 	{
-		CreateRoute(*_start, *deadends->at(i));
+		CreateRoute(*_start, *deadends.at(i));
 	}
 }
 
-GridLocation * PlayingState::CreateDeadend(GridLocation & finish) {
-	GridLocation * temp = new GridLocation();
+std::unique_ptr<GridLocation> PlayingState::CreateDeadend(GridLocation & finish) {
+	auto temp = std::make_unique<GridLocation>();
 	temp->X = temp->Y = 0;
 
 	for (int i = 0; i < MAX_ATTEMPTS; i++) {
@@ -392,7 +386,7 @@ void PlayingState::Render(sf::RenderWindow * window) {
 	//cycle through and render all the walls of the maze	
 	for (auto iter = _maze->begin(); iter != _maze->end(); iter++)
 	{
-		float dist = DistanceToHero((*iter));
+		float dist = DistanceToHero((*iter).get());
 		float inter = 1.0f - (dist / BUBBLE_SIZE);
 		
 		if (inter < 0) continue;
@@ -422,7 +416,7 @@ void PlayingState::ProcessInput() {
 	bool topBlocked = false;
 	bool bottomBlocked = false;
 
-	auto blocked = _physics->IsColliding(_hero);
+	auto blocked = _physics->IsColliding(_hero.get());
 	_heroController->Process(blocked);
 
 	//_terrorsController->Think();
@@ -430,7 +424,7 @@ void PlayingState::ProcessInput() {
 
 GameState * PlayingState::Update()
 {
-	if (_physics->AreColliding(_hero, _finishPoint))
+	if (_physics->AreColliding(_hero.get(), _finishPoint))
 	{
 		_physics->Reset();
 		auto nextLevel = new PlayingState();

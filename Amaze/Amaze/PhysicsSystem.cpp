@@ -1,13 +1,6 @@
 #include "PhysicsSystem.h"
 
 
-PhysicsSystem * PhysicsSystem::_instance = nullptr;
-PhysicsSystem * PhysicsSystem::GetInstance() {
-	if (_instance == nullptr) _instance = new PhysicsSystem();
-
-	return _instance;
-}
-
 PhysicsSystem::PhysicsSystem()
 {
 	_collidables = new std::vector<Pawn *>();

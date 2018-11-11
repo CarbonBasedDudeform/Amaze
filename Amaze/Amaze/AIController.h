@@ -64,7 +64,7 @@ private:
 	bool MoveUp(AIPawn *);
 	bool MoveDown(AIPawn *);
 
-	PhysicsSystem * _physics;
+	std::unique_ptr<PhysicsSystem> _physics;
 
 	Belief * _heroLocation;
 	Intention DecideIntent(Intention);

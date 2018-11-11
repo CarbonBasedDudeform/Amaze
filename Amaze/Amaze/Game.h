@@ -2,21 +2,20 @@
 #include <SFML/Graphics.hpp>
 #include "GameStates.h"
 #include "GameProperties.h"
+#include <memory>
 
 class Game
 {
 public:
-	~Game();
+	Game();
 	static sf::String GAME_TITLE;
 
-	static Game * GetInstance();
 	bool Init();
 	void Loop();
 private:
-	Game();
-	static Game * _instance;
+	static int _count;
 	GameState * _curGameState;
-	sf::RenderWindow * _window;
+	std::unique_ptr<sf::RenderWindow> _window;
 
 };
 
