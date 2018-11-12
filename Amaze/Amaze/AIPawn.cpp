@@ -1,5 +1,5 @@
 #include "AIPawn.h"
-
+#include "GameProperties.h"
 
 AIPawn::AIPawn()
 {
@@ -15,7 +15,7 @@ AIPawn::AIPawn()
 #endif
 
 #ifdef _DEBUG 
-	Size = 10;
+	Size = ((float)GameProperties::SCREEN_WIDTH / (float)GameProperties::SCREEN_HEIGHT) * 10;
 #endif
 }
 

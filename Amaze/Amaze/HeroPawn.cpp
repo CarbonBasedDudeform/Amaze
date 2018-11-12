@@ -1,5 +1,5 @@
 #include "HeroPawn.h"
-
+#include "GameProperties.h"
 
 HeroPawn::HeroPawn() 
 {
@@ -15,7 +15,7 @@ HeroPawn::HeroPawn()
 #endif
 
 #ifdef _DEBUG 
-	Size = 10;
+	Size = ((float)GameProperties::SCREEN_WIDTH / (float)GameProperties::SCREEN_HEIGHT) * 10;
 #endif
 }
 
