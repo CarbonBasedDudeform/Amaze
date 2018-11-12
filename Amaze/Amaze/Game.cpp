@@ -7,6 +7,7 @@ int Game::_count = 0;
 Game::Game()
 {
 	_window = std::make_unique< sf::RenderWindow>(sf::VideoMode(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT), GAME_TITLE);
+	_window->setFramerateLimit(60);
 	_curGameState = new MenuState();
 	++_count;
 	assert(_count <= 1);
