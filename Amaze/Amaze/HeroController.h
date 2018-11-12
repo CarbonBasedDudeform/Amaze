@@ -5,6 +5,11 @@
 
 #include "SFML\Graphics.hpp"
 
+/*
+	Controls the hero pawn,
+	doesn't do much other than stop the hero from walking through walls
+*/
+
 class HeroController :
 	public Controller
 {

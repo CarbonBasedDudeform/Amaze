@@ -1,5 +1,10 @@
 #pragma once
 #include "GameState.h"
+
+/*
+	Class that will manage the game over scene.
+*/
+
 class GameOverState :
 	public GameState
 {

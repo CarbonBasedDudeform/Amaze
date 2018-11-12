@@ -1,6 +1,10 @@
 #pragma once
 #include "PhysicsSystem.h"
 
+/*
+	Controls a pawn
+*/
+
 class Controller
 {
 public:

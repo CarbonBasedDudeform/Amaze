@@ -9,6 +9,10 @@ struct GridLocation {
 	int Y;
 };
 
+/*
+	One of the blocks that make up the maze
+*/
+
 class GridBlock : public Pawn
 {
 public:

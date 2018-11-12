@@ -2,6 +2,10 @@
 #include "GameState.h"
 #include "GameStates.h"
 
+/*
+	A fairly dumb class that will manage the scene / state of the game when the menu is being displayed.
+*/
+
 class MenuState :
 	public GameState
 {

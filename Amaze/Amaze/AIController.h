@@ -16,13 +16,14 @@
 	The Intention will be to move in such a way as to fulfil the desire of finding and trapping the player.
 */
 
-//The belief holds a location, believed to be the heros location
+//The belief holds a location, believed to be the heros location ... or any other location.
 struct Belief {
 	float WorldX;
 	float WorldY;
 };
 
 //the intention holds a bool, indicating which direction the AIs intends to travel in
+//or an int representing the number of searches it has done in the past inentions.
 class Intention {
 public:
 	Intention() : Left(false), Right(false), Up(false), Down(false), Searching(0) {};

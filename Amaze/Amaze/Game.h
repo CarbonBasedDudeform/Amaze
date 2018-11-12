@@ -5,6 +5,14 @@
 #include <memory>
 #include <chrono>
 
+/*
+This class basically holds the game loop.
+It creates the window, keeps track of time between frames
+and does the classic Update-Input-Render loop.
+
+It's intended use is to be created, initialised then looped.
+*/
+
 class Game
 {
 public:

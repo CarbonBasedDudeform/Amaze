@@ -3,6 +3,14 @@
 #include "GridBlock.h"
 #include "PhysicsSystem.h"
 
+/*
+	The Maze class is intended to generate a maze used in the game.
+	It is essentially the game world, it has a physics system which it can add the blocks to that need collision detection.
+	It provides some utility functions for other classes to get information out of it.
+	But otherwise, it's intended to be a black box that will generate a world / level.
+	Maybe Maze is a bit of a misnomer.
+*/
+
 class Maze
 {
 public:

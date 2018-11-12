@@ -15,6 +15,15 @@
 //stl
 #include <vector>
 
+/*
+	This class populates the world with Pawns, it places the hero (the player) at the start
+	and creates the number of terrors (ai enemies) to be placed in the maze.
+	In a vague sense, it manages the numbers for the level.
+	It passes on calls to process input for active pawns in the level
+	and render calls for them.
+	In a dumb sense, it manages items in the world when in the game is being played.
+*/
+
 struct PlayingStateOptions {
 	int LevelSize;
 	int TerrorPopulation;
