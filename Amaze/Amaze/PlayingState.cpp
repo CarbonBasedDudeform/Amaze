@@ -8,10 +8,6 @@ PlayingState::PlayingState()
 	_physics = std::make_unique<PhysicsSystem>();
 	_maze = std::make_unique<Maze>(_physics.get());
 	_terrors = std::make_unique<std::vector<std::unique_ptr<AIPawn>>>();
-	_terrors->push_back(std::make_unique<AIPawn>());
-	_terrors->push_back(std::make_unique<AIPawn>());
-
-	_placedAI = 0;
 }
 
 
@@ -29,6 +25,9 @@ void PlayingState::Init(PlayingStateOptions opts) {
 	//:::::::::::::::IMPORTANT::::::::::::::: HeroController is created here so that the camera can be focused on the hero pawn correctly.
 	//										 aka, herocontroller needs to be created after the pawns WorldX and Y have been set
 	_heroController = std::make_unique<HeroController>(_hero.get());
+	for (int i = 0; i < opts.TerrorPopulation; i++) {
+		_terrors->push_back(std::make_unique<AIPawn>());
+	}
 	_terrorsController = std::make_unique<AIController>(_terrors.get(), _maze.get(), _physics.get(), _hero.get());
 }
 
@@ -66,7 +65,7 @@ GameState * PlayingState::Update()
 	{
 		_physics->Reset();
 		auto nextLevel = new PlayingState();
-		auto options = PlayingStateOptions(_maze->GetSize() + 1);
+		auto options = PlayingStateOptions(_maze->GetSize() + 1, _terrors->size() + 1);
 		nextLevel->Init(options);
 		delete this;
 		return nextLevel;

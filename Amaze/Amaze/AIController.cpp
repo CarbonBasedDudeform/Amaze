@@ -9,12 +9,13 @@ AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, Maze * 
 
 	auto& deadends = _maze->GetDeadends();
 
+	auto deadendCount = deadends.size();
 	int i = 0;
 	for (auto iter = pawns->begin(); iter != pawns->end(); iter++)
 	{
 		auto temp = std::make_unique<AIPawnWrapper>();
 		temp->pawn = (*iter).get();
-		auto & block = _maze->GetBlock(deadends.at(i)->X, deadends.at(i)->Y);
+		auto & block = _maze->GetBlock(deadends.at(i % deadendCount)->X, deadends.at(i % deadendCount)->Y);
 		temp->pawn->WorldX = block.WorldX;
 		temp->pawn->WorldY = block.WorldY;
 		_physics->AddCollidable(temp->pawn);

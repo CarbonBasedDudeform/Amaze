@@ -17,7 +17,8 @@
 
 struct PlayingStateOptions {
 	int LevelSize;
-	PlayingStateOptions(int size) : LevelSize(size) {};
+	int TerrorPopulation;
+	PlayingStateOptions(int size, int terrors) : LevelSize(size), TerrorPopulation(terrors) {};
 };
 
 class PlayingState :
@@ -42,7 +43,6 @@ private:
 	//The Terrors (The T errors)
 	std::unique_ptr<std::vector<std::unique_ptr<AIPawn>>> _terrors;
 	std::unique_ptr<AIController> _terrorsController;
-	int _placedAI;
 
 	static const float BUBBLE_SIZE;
 };

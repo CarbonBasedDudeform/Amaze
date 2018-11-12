@@ -24,7 +24,7 @@ void MenuState::Render(sf::RenderWindow * window) {
 
 void MenuState::ProcessInput(float delta) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		auto options = PlayingStateOptions(INITIAL_MAZE_SIZE);
+		auto options = PlayingStateOptions(INITIAL_MAZE_SIZE, 0);
 		auto state = new PlayingState();
 		state->Init(options);
 		_nextState = state;
