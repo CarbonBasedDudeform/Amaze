@@ -43,7 +43,7 @@ void Maze::GenerateMaze(int size) {
 	CreateRoute(*_start, *_finish);
 
 	//proceed to create false routes from the start -- these lead the player to other deadends
-	_deadends = CreateFauxRoutes(_size / 2);
+	_deadends = CreateFauxRoutes((_size * 3)/2);
 }
 
 //takes two GridLocations as input by reference and populates them with the (x,y) in the maze of their respective positions
