@@ -71,6 +71,6 @@ private:
 	Maze * _maze;
 	std::unique_ptr<Belief> _heroLocation;
 	Intention DecideIntent(AIPawnWrapper * pawn, Intention);
-
+	Intention Explore(const BlockedDirections& blocked, Intention& previousIntent) const;
 };
 

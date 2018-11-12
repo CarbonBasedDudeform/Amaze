@@ -54,17 +54,24 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 }
 
 Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousIntent) {
-	Intention intent;
+	
 	auto blocked = _physics->RayCastCollide(pawn->pawn, VIEW_DISTANCE);
 
+	return std::move(Explore(blocked, previousIntent));
+}
+
+Intention AIController::Explore(const BlockedDirections& blocked, Intention& previousIntent) const
+{
 	if (previousIntent.Down && !blocked.Down.Blocked ||
 		previousIntent.Up && !blocked.Up.Blocked ||
 		previousIntent.Left && !blocked.Left.Blocked ||
 		previousIntent.Right && !blocked.Right.Blocked
 		)
 	{
-		return previousIntent;
+		return std::move(previousIntent);
 	}
+
+	Intention intent;
 	int rand = std::rand() % 100 - std::rand() % 100;
 	int intentedDirections = 0;
 	if (rand < 0) {
@@ -110,7 +117,7 @@ Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousInt
 		intent.Up = true;
 	}
 
-	return intent;
+	return std::move(intent);
 }
 
 void AIController::FindOpenSpace() {
