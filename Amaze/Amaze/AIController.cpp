@@ -1,8 +1,9 @@
 #include "AIController.h"
 
-AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, Maze * maze, PhysicsSystem * physics)
+AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, Maze * maze, PhysicsSystem * physics, HeroPawn * hero)
 {
 	_physics = physics;
+	_hero = hero;
 	_maze = maze;
 	_pawns = std::make_unique<std::vector<std::unique_ptr<AIPawnWrapper>>>();
 
@@ -42,12 +43,7 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 
 	for (auto iter = _pawns->begin(); iter != _pawns->end(); iter++)
 	{
-		if (!(*iter)->PreviousMoveOK)
-		{
-			//decide new intention
-			(*iter)->MyIntention = DecideIntent((*iter).get(), (*iter)->MyIntention);
-		}
-
+		(*iter)->MyIntention = DecideIntent((*iter).get(), (*iter)->MyIntention);
 		//and move
 		MoveIntoSpace((*iter).get(), timeDelta);
 	}
@@ -56,6 +52,10 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousIntent) {
 	
 	auto blocked = _physics->RayCastCollide(pawn->pawn, VIEW_DISTANCE);
+	auto dist = DistanceToHero(pawn->pawn, _hero);
+	if (dist < VIEW_DISTANCE) {
+		return std::move(Investigate(pawn->pawn));
+	}
 
 	return std::move(Explore(blocked, previousIntent));
 }
@@ -120,7 +120,34 @@ Intention AIController::Explore(const BlockedDirections& blocked, Intention& pre
 	return std::move(intent);
 }
 
-void AIController::FindOpenSpace() {
+Intention AIController::Investigate(Pawn * pawn)
+{
+	Intention temp;
+	if (_hero->WorldX < pawn->WorldX) {
+		temp.Left = true;
+	}
+	else
+	{
+		temp.Right = true;
+	}
+
+	if (_hero->WorldY < pawn->WorldY) {
+		temp.Up = true;
+	}
+	else
+	{
+		temp.Down = true;
+	}
+
+	return std::move(temp);
+}
+
+float AIController::DistanceToHero(Pawn * pawn, Pawn * hero)
+{
+	float x = hero->WorldX - pawn->WorldX;
+	float y = hero->WorldY - pawn->WorldY;
+
+	return sqrtf((x*x) + (y*y));
 }
 
 void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {

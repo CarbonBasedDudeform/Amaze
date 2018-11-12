@@ -94,7 +94,7 @@ BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 		if (!temp.Down.Blocked) temp.Down.Blocked = AreColliding(pawn->WorldX, pawn->WorldY + buffer, pawn->Size, (*iter));
 	}
 
-	return temp;
+	return std::move(temp);
 }
 
 bool PhysicsSystem::AreColliding(float x1, float y1, int size, Pawn * pwn) {
