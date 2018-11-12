@@ -17,12 +17,7 @@
 */
 
 //The belief holds a location, believed to be the heros location
-class Belief {
-public:
-	Belief() : X(0), Y(0), WorldX(0), WorldY(0) {};
-	~Belief() {};
-	int X;
-	int Y;
+struct Belief {
 	float WorldX;
 	float WorldY;
 };
@@ -30,13 +25,14 @@ public:
 //the intention holds a bool, indicating which direction the AIs intends to travel in
 class Intention {
 public:
-	Intention() : Left(false), Right(false), Up(false), Down(false) {};
-	Intention(Intention& intent) : Left(intent.Left), Right(intent.Right), Up(intent.Up), Down(intent.Down) {};
+	Intention() : Left(false), Right(false), Up(false), Down(false), Searching(0) {};
+	Intention(Intention& intent) : Left(intent.Left), Right(intent.Right), Up(intent.Up), Down(intent.Down), Searching(intent.Searching){};
 	~Intention() {};
 	bool Left;
 	bool Right;
 	bool Up;
 	bool Down;
+	int Searching;
 };
 
 class AIPawnWrapper {
@@ -57,6 +53,7 @@ public:
 
 private:
 	const int VIEW_DISTANCE = 75;
+	const int BLOCKING_DISTANCE = 25;
 	std::unique_ptr<std::vector<std::unique_ptr<AIPawnWrapper>>> _pawns;
 	
 	void MoveIntoSpace(AIPawnWrapper *, float timeDelta);
@@ -68,11 +65,13 @@ private:
 
 	PhysicsSystem * _physics;
 	Maze * _maze;
-	std::unique_ptr<Belief> _heroLocation;
+	Belief _lastLocation;
 	HeroPawn * _hero;
 	float DistanceToHero(Pawn * pawn, Pawn * hero);
+	float DistanceToLocation(Pawn * pawn, Belief& location);
+	Belief RandomLocationNear(Belief& lastBelief);
 	Intention DecideIntent(AIPawnWrapper * pawn, Intention);
 	Intention Explore(const BlockedDirections& blocked, Intention& previousIntent) const;
-	Intention Investigate(Pawn * pawn);
+	Intention Investigate(Pawn * pawn, const Intention& previousIntent);
 };
 

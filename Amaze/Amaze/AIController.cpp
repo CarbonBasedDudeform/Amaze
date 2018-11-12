@@ -23,11 +23,6 @@ AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, Maze * 
 	}
 
 	_speed = 0.02f;
-	_heroLocation = std::make_unique<Belief>();
-	_heroLocation->X = rand() % _maze->GetSize();
-	_heroLocation->Y = rand() % _maze->GetSize();
-	_heroLocation->WorldX = (_heroLocation->X * GridBlock::WALL_LENGTH) + GridBlock::WALL_LENGTH / 2; //this is the equation to calculate world pos, the offset is the grid position * the length of a wall, plus half for the centre of the wall
-	_heroLocation->WorldY = (_heroLocation->Y * GridBlock::WALL_LENGTH) + GridBlock::WALL_LENGTH / 2;
 }
 
 AIController::~AIController()
@@ -49,14 +44,22 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 	}
 }
 
-Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousIntent) {
-	
-	auto blocked = _physics->RayCastCollide(pawn->pawn, VIEW_DISTANCE);
+Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousIntent) 
+{	
 	auto dist = DistanceToHero(pawn->pawn, _hero);
-	if (dist < VIEW_DISTANCE) {
-		return std::move(Investigate(pawn->pawn));
+	const bool HeroHasBeenSeen = dist < VIEW_DISTANCE;
+	const bool SearchMore = previousIntent.Searching > 1 && previousIntent.Searching < 5;
+	if (HeroHasBeenSeen) {
+		_lastLocation.WorldX = _hero->WorldX;
+		_lastLocation.WorldY = _hero->WorldY;
+		return std::move(Investigate(pawn->pawn, previousIntent));
+	}
+	else if (SearchMore) {
+		_lastLocation = std::move(RandomLocationNear(_lastLocation));
+		return std::move(Investigate(pawn->pawn, previousIntent));
 	}
 
+	auto blocked = _physics->RayCastCollide(pawn->pawn, BLOCKING_DISTANCE);
 	return std::move(Explore(blocked, previousIntent));
 }
 
@@ -120,10 +123,12 @@ Intention AIController::Explore(const BlockedDirections& blocked, Intention& pre
 	return std::move(intent);
 }
 
-Intention AIController::Investigate(Pawn * pawn)
+Intention AIController::Investigate(Pawn * pawn, const Intention& previousIntent)
 {
 	Intention temp;
-	if (_hero->WorldX < pawn->WorldX) {
+	temp.Searching = previousIntent.Searching + 1;
+
+	if (_lastLocation.WorldX < pawn->WorldX) {
 		temp.Left = true;
 	}
 	else
@@ -131,7 +136,7 @@ Intention AIController::Investigate(Pawn * pawn)
 		temp.Right = true;
 	}
 
-	if (_hero->WorldY < pawn->WorldY) {
+	if (_lastLocation.WorldY < pawn->WorldY) {
 		temp.Up = true;
 	}
 	else
@@ -148,6 +153,22 @@ float AIController::DistanceToHero(Pawn * pawn, Pawn * hero)
 	float y = hero->WorldY - pawn->WorldY;
 
 	return sqrtf((x*x) + (y*y));
+}
+
+float AIController::DistanceToLocation(Pawn * pawn, Belief & location)
+{
+	float x = location.WorldX - pawn->WorldX;
+	float y = location.WorldY - pawn->WorldY;
+
+	return sqrtf((x*x) + (y*y));
+}
+
+Belief AIController::RandomLocationNear(Belief & lastBelief)
+{
+	Belief temp;
+	temp.WorldX = lastBelief.WorldX + (rand() % VIEW_DISTANCE);
+	temp.WorldY = lastBelief.WorldY + (rand() % VIEW_DISTANCE);
+	return std::move(temp);
 }
 
 void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
