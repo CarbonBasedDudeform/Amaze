@@ -65,43 +65,49 @@ Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousInt
 	{
 		return previousIntent;
 	}
-
-	if (blocked.Left.Distance > blocked.Right.Distance) {
-		intent.Right = false;
-		intent.Left = true;
-	}
-	else if (blocked.Left.Distance < blocked.Right.Distance)
-	{
-		intent.Left = false;
-		intent.Right = true;
-	}
-	else if (blocked.Left.Distance == blocked.Right.Distance)
-	{
-		if (!previousIntent.Left && !previousIntent.Right)
-		{
-			previousIntent.Left = true;
+	int rand = std::rand() % 100 - std::rand() % 100;
+	int intentedDirections = 0;
+	if (rand < 0) {
+		if (blocked.Up.Distance >= blocked.Down.Distance && blocked.Up.Distance >= blocked.Left.Distance && blocked.Up.Distance >= blocked.Right.Distance) {
+			intent.Up = true;
+			intentedDirections++;
 		}
-		intent.Left = previousIntent.Left;
-		intent.Right = previousIntent.Right;
+		else if (blocked.Down.Distance >= blocked.Up.Distance && blocked.Down.Distance >= blocked.Left.Distance && blocked.Down.Distance >= blocked.Right.Distance) {
+			intent.Down = true;
+			intentedDirections++;
+		}
+		else if (blocked.Left.Distance >= blocked.Down.Distance && blocked.Left.Distance >= blocked.Up.Distance && blocked.Left.Distance >= blocked.Right.Distance) {
+			intent.Left = true;
+			intentedDirections++;
+		}
+		else if (blocked.Right.Distance >= blocked.Up.Distance && blocked.Right.Distance >= blocked.Left.Distance && blocked.Right.Distance >= blocked.Down.Distance) {
+			intent.Right = true;
+			intentedDirections++;
+		}
+	}
+	else
+	{
+		if (blocked.Left.Distance >= blocked.Down.Distance && blocked.Left.Distance >= blocked.Up.Distance && blocked.Left.Distance >= blocked.Right.Distance) {
+			intent.Left = true;
+			intentedDirections++;
+		}
+		else if (blocked.Right.Distance >= blocked.Up.Distance && blocked.Right.Distance >= blocked.Left.Distance && blocked.Right.Distance >= blocked.Down.Distance) {
+			intent.Right = true;
+			intentedDirections++;
+		}
+		else if (blocked.Up.Distance >= blocked.Down.Distance && blocked.Up.Distance >= blocked.Left.Distance && blocked.Up.Distance >= blocked.Right.Distance) {
+			intent.Up = true;
+			intentedDirections++;
+		}
+		else if (blocked.Down.Distance >= blocked.Up.Distance && blocked.Down.Distance >= blocked.Left.Distance && blocked.Down.Distance >= blocked.Right.Distance) {
+			intent.Down = true;
+			intentedDirections++;
+		}
 	}
 
-	if (blocked.Up.Distance > blocked.Down.Distance) {
-		intent.Down = false;
+	if (intentedDirections == 0 || intentedDirections > 1) {
+		intent.Up = intent.Down = intent.Left = intent.Right = false;
 		intent.Up = true;
-	}
-	else if (blocked.Up.Distance < blocked.Down.Distance)
-	{
-		intent.Up = false;
-		intent.Down = true;
-	}
-	else if (blocked.Up.Distance == blocked.Down.Distance)
-	{
-		if (!previousIntent.Up && !previousIntent.Down)
-		{
-			previousIntent.Down = true;
-		}
-		intent.Up = previousIntent.Up;
-		intent.Down = previousIntent.Down;
 	}
 
 	return intent;

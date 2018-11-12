@@ -56,7 +56,7 @@ public:
 	void Process(BlockedDirections, float timeDelta) override;
 
 private:
-	const int VIEW_DISTANCE = 5;
+	const int VIEW_DISTANCE = 25;
 	std::unique_ptr<std::vector<std::unique_ptr<AIPawnWrapper>>> _pawns;
 	
 	void FindOpenSpace();
@@ -71,5 +71,6 @@ private:
 	Maze * _maze;
 	std::unique_ptr<Belief> _heroLocation;
 	Intention DecideIntent(AIPawnWrapper * pawn, Intention);
+
 };
 
