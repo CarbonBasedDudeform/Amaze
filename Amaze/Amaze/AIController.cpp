@@ -48,7 +48,7 @@ Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousInt
 {	
 	auto dist = DistanceToHero(pawn->pawn, _hero);
 	const bool HeroHasBeenSeen = dist < VIEW_DISTANCE;
-	const bool SearchMore = previousIntent.Searching > 1 && previousIntent.Searching < 5;
+	const bool SearchMore = previousIntent.Searching > 0 && previousIntent.Searching <= 5;
 	if (HeroHasBeenSeen) {
 		_lastLocation.WorldX = _hero->WorldX;
 		_lastLocation.WorldY = _hero->WorldY;

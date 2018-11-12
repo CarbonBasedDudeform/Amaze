@@ -27,7 +27,6 @@ class Intention {
 public:
 	Intention() : Left(false), Right(false), Up(false), Down(false), Searching(0) {};
 	Intention(Intention& intent) : Left(intent.Left), Right(intent.Right), Up(intent.Up), Down(intent.Down), Searching(intent.Searching){};
-	~Intention() {};
 	bool Left;
 	bool Right;
 	bool Up;
@@ -38,7 +37,6 @@ public:
 class AIPawnWrapper {
 public:
 	AIPawnWrapper() {};
-	~AIPawnWrapper() {};
 	Intention MyIntention;
 	AIPawn * pawn;
 };
