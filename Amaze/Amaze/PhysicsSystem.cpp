@@ -3,7 +3,7 @@
 
 PhysicsSystem::PhysicsSystem()
 {
-	_collidables = new std::vector<Pawn *>();
+	_collidables = std::make_unique<std::vector<Pawn *>>();
 }
 
 

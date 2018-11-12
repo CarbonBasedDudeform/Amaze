@@ -23,7 +23,7 @@ public:
 	void MoveDown(float timeDelta);
 	void Process(BlockedDirections, float timeDelta) override;
 private:
-	sf::View * _view;
+	std::unique_ptr<sf::View> _view;
 	HeroPawn * _pawn;
 	void UpdateView();
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML\Graphics.hpp"
+#include <memory>
 
 /*
 Pawns represent contrallable Entities
@@ -18,8 +19,8 @@ public:
 	sf::Color Colour;
 	sf::Color RenderColour;
 protected:
-	sf::Texture * _texture;
-	sf::Sprite * _sprite;
+	std::unique_ptr<sf::Texture> _texture;
+	std::unique_ptr<sf::Sprite> _sprite;
 	float _offset;
 };
 

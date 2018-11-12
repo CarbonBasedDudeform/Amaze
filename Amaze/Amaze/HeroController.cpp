@@ -2,7 +2,7 @@
 
 HeroController::HeroController(HeroPawn * pawn) : Controller(), _pawn(pawn)
 {
-	_view = new sf::View(sf::Vector2f(_pawn->WorldX, _pawn->WorldY), sf::Vector2f(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT));
+	_view = std::make_unique<sf::View>(sf::Vector2f(_pawn->WorldX, _pawn->WorldY), sf::Vector2f(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT));
 	_speed = 0.1f;
 }
 
@@ -13,7 +13,7 @@ HeroController::~HeroController()
 
 sf::View * HeroController::GetView()
 {
-	return _view;
+	return _view.get();
 }
 
 void HeroController::UpdateView(){

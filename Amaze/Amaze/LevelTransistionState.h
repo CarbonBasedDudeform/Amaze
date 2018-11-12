@@ -1,5 +1,9 @@
 #pragma once
 #include "GameState.h"
+/*
+	Class that will manage what is displayed and can be done when a level is being loaded.
+*/
+
 class LevelTransistionState :
 	public GameState
 {

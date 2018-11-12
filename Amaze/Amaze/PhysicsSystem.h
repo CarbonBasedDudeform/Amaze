@@ -51,8 +51,6 @@ public:
 	void Reset();
 	BlockedDirections RayCastCollide(Pawn * from, int distance);
 private:
-
-
-	std::vector<Pawn *> * _collidables;
+	std::unique_ptr<std::vector<Pawn *>> _collidables;
 };
 
