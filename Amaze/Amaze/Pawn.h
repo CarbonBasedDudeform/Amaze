@@ -19,7 +19,7 @@ public:
 	sf::Color Colour;
 	sf::Color RenderColour;
 protected:
-	std::unique_ptr<sf::Texture> _texture;
+	std::shared_ptr<sf::Texture> _texture;
 	std::unique_ptr<sf::Sprite> _sprite;
 	float _offset;
 };

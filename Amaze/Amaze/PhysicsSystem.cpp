@@ -84,7 +84,7 @@ BlockedDirections PhysicsSystem::RayCastCollide(Pawn * from, int distance)
 
 BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 {
-	int buffer = 10;
+	static const int buffer = 2;
 	BlockedDirections temp;
 	auto worldX = pawn->WorldX;
 	auto worldY = pawn->WorldY;
