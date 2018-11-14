@@ -5,6 +5,13 @@
 MenuState::MenuState()
 {
 	_nextState = this;
+	_texture = std::make_shared<sf::Texture>();
+	_texture->loadFromFile("Textures/menu_bg.png");
+	_sprite = std::make_unique<sf::Sprite>(*_texture);
+	_textureToStart = std::make_shared<sf::Texture>();
+	_textureToStart->loadFromFile("Textures/press_to_start.png");
+	_spriteToStart = std::make_unique<sf::Sprite>(*_textureToStart);
+	_spriteToStart->setPosition(100, 400);
 }
 
 
@@ -17,9 +24,8 @@ void MenuState::Init(GameStateOptions opts) {
 }
 
 void MenuState::Render(sf::RenderWindow * window) {
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
-	window->draw(shape);
+	window->draw(*_sprite);
+	window->draw(*_spriteToStart);
 }
 
 void MenuState::ProcessInput(float delta) {

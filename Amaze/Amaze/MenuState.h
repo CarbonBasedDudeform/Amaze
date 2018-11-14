@@ -19,5 +19,9 @@ public:
 private:
 	GameState * _nextState;
 	static const int INITIAL_MAZE_SIZE = 5;
+	std::shared_ptr<sf::Texture> _texture;
+	std::unique_ptr<sf::Sprite> _sprite;
+	std::shared_ptr<sf::Texture> _textureToStart;
+	std::unique_ptr<sf::Sprite> _spriteToStart;
 };
 
