@@ -41,3 +41,10 @@ void HeroPawn::Render(sf::RenderWindow * window)
 	window->draw(circle);
 #endif
 }
+
+void HeroPawn::SetRotation(float angle)
+{
+#ifdef NDEBUG
+	_sprite->setRotation(angle);
+#endif
+}

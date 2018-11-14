@@ -22,21 +22,25 @@ void HeroController::UpdateView(){
 
 void HeroController::MoveLeft(float timeDelta) {
 	_pawn->WorldX -= _speed * timeDelta;
+	_pawn->SetRotation(-90);
 	UpdateView();
 }
 
 void HeroController::MoveRight(float timeDelta) {
 	_pawn->WorldX += _speed * timeDelta;
+	_pawn->SetRotation(90);
 	UpdateView();
 }
 
 void HeroController::MoveDown(float timeDelta) {
 	_pawn->WorldY += _speed * timeDelta;
+	_pawn->SetRotation(180);
 	UpdateView();
 }
 
 void HeroController::MoveUp(float timeDelta) {
 	_pawn->WorldY -= _speed * timeDelta;
+	_pawn->SetRotation(0);
 	UpdateView();
 }
 

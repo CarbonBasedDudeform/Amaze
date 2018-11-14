@@ -7,11 +7,12 @@ AIPawn::AIPawn()
 	WorldY = 0;
 	//if not debug use the texture, this is to address the issue #18 : https://github.com/CarbonBasedDudeform/Amaze/issues/18
 #ifdef NDEBUG
-	_texture = std::make_unique<sf::Texture>();
-	_texture->loadFromFile("Textures/hero.png");
+	_texture = std::make_shared<sf::Texture>();
+	_texture->loadFromFile("Textures/terror.png");
 	Size = _texture->getSize().x;
-	_offset = Size / 2;
+	_offset = Size / 2.0f;
 	_sprite = std::make_unique<sf::Sprite>(*_texture);
+	_sprite->setOrigin(_offset, _offset);
 #endif
 
 #ifdef _DEBUG 
@@ -27,7 +28,7 @@ AIPawn::~AIPawn()
 void AIPawn::Render(sf::RenderWindow * window)
 {
 #ifdef NDEBUG
-	_sprite->setPosition(WorldX - _offset, WorldY - _offset);
+	_sprite->setPosition(WorldX, WorldY);
 	window->draw(*_sprite);
 #endif
 

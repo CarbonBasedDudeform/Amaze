@@ -12,5 +12,6 @@ public:
 	HeroPawn();
 	~HeroPawn();
 	void Render(sf::RenderWindow *);
+	void SetRotation(float angle);
 };
 

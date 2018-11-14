@@ -292,18 +292,7 @@ void Maze::Render(sf::RenderWindow * window, int bubbleSize, Pawn * hero)
 	//cycle through and render all the walls of the maze	
 	for (auto iter = _maze->begin(); iter != _maze->end(); iter++)
 	{
-		float dist = DistanceToHero((*iter).get(), hero);
-		float inter = 1.0f - (dist / bubbleSize);
-
-		if (inter < 0) continue;
-
-		(*iter)->Colour.r *= inter;
-		(*iter)->Colour.g *= inter;
-		(*iter)->Colour.b *= inter;
-
 		(*iter)->Render(window);
-
-		(*iter)->Colour = (*iter)->RenderColour;
 	}
 }
 
