@@ -34,6 +34,15 @@ struct BlockedDirections
 	no Runge-Kutta here, just a weird choice of circular collision detection for a game that is mostly squares.
 */
 
+struct Quad {
+	float X;
+	float Y;
+	Quad * a;
+	Quad * aa;
+	Quad * b;
+	Quad * bb;
+};
+
 class PhysicsSystem
 {
 public:
@@ -42,7 +51,7 @@ public:
 	
 	BlockedDirections IsColliding(Pawn*);
 
-	bool AreColliding(float, float, int, Pawn*);
+	bool AreColliding(float, float, float, Pawn*);
 	bool AreColliding(Pawn*, Pawn*);
 	float FindDistance(float, float, Pawn*);
 

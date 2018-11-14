@@ -15,22 +15,21 @@ void PhysicsSystem::AddCollidable(Pawn * pawn)
 {
 	if (pawn == nullptr) return;
 
-	//update this to a better container
-	for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
+	const bool IsAlreadyAdded = std::find(_collidables->begin(), _collidables->end(), pawn) != _collidables->end();
+	if (IsAlreadyAdded)
 	{
-		if (*iter == pawn) return;
+		return;
 	}
+
 	_collidables->push_back(pawn);
 }
 
-void PhysicsSystem::RemoveCollidable(Pawn * pawn) {
-	
-	for (int i = 0; i < _collidables->size(); i++){
-		//if collidable[i] points to the same memory location as the pawn they're the same thing
-		if (_collidables->at(i) == pawn) {
-			_collidables->erase(_collidables->begin() + i);
-			return;
-		}
+void PhysicsSystem::RemoveCollidable(Pawn * pawn) 
+{
+	auto res = std::find(_collidables->begin(), _collidables->end(), pawn);
+	if (res != _collidables->end())
+	{
+		_collidables->erase(res);
 	}
 }
 
@@ -46,6 +45,9 @@ BlockedDirections PhysicsSystem::RayCastCollide(Pawn * from, int distance)
 	temp.Right.Distance = distance;
 	temp.Up.Distance = distance;
 	temp.Down.Distance = distance;
+	auto worldX = from->WorldX;
+	auto worldY = from->WorldY;
+	auto Size = from->Size;
 
 	for (int buffer = 0; buffer < distance; buffer += 1)
 	{
@@ -56,22 +58,22 @@ BlockedDirections PhysicsSystem::RayCastCollide(Pawn * from, int distance)
 
 			if (!temp.Left.Blocked)
 			{
-				temp.Left.Blocked = AreColliding(from->WorldX - buffer, from->WorldY, from->Size, (*iter));
+				temp.Left.Blocked = AreColliding(worldX - buffer, worldY, Size, (*iter));
 				if (temp.Left.Blocked) temp.Left.Distance = buffer;
 			}
 			if (!temp.Right.Blocked)
 			{
-				temp.Right.Blocked = AreColliding(from->WorldX + buffer, from->WorldY, from->Size, (*iter));
+				temp.Right.Blocked = AreColliding(worldX + buffer, worldY, Size, (*iter));
 				if (temp.Right.Blocked) temp.Right.Distance = buffer;
 			}
 			if (!temp.Up.Blocked)
 			{
-				temp.Up.Blocked = AreColliding(from->WorldX, from->WorldY - buffer, from->Size, (*iter));
+				temp.Up.Blocked = AreColliding(worldX, worldY - buffer, Size, (*iter));
 				if (temp.Up.Blocked) temp.Up.Distance = buffer;
 			}
 			if (!temp.Down.Blocked)
 			{
-				temp.Down.Blocked = AreColliding(from->WorldX, from->WorldY + buffer, from->Size, (*iter));
+				temp.Down.Blocked = AreColliding(worldX, worldY + buffer, Size, (*iter));
 				if (temp.Down.Blocked) temp.Down.Distance = buffer;
 			}
 		}
@@ -82,31 +84,32 @@ BlockedDirections PhysicsSystem::RayCastCollide(Pawn * from, int distance)
 
 BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 {
-	int buffer = 5;
+	int buffer = 10;
 	BlockedDirections temp;
+	auto worldX = pawn->WorldX;
+	auto worldY = pawn->WorldY;
+	auto Size = pawn->Size;
 	for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
 	{
 		if ((*iter) == pawn) continue;
-
-		if (!temp.Left.Blocked) temp.Left.Blocked = AreColliding(pawn->WorldX - buffer, pawn->WorldY, pawn->Size, (*iter));
-		if (!temp.Right.Blocked) temp.Right.Blocked = AreColliding(pawn->WorldX + buffer, pawn->WorldY, pawn->Size, (*iter));
-		if (!temp.Up.Blocked) temp.Up.Blocked = AreColliding(pawn->WorldX, pawn->WorldY - buffer, pawn->Size, (*iter));
-		if (!temp.Down.Blocked) temp.Down.Blocked = AreColliding(pawn->WorldX, pawn->WorldY + buffer, pawn->Size, (*iter));
+		
+		if (!temp.Left.Blocked) temp.Left.Blocked = AreColliding(worldX - buffer, worldY, Size, (*iter));
+		if (!temp.Right.Blocked) temp.Right.Blocked = AreColliding(worldX + buffer, worldY, Size, (*iter));
+		if (!temp.Up.Blocked) temp.Up.Blocked = AreColliding(worldX, worldY - buffer, Size, (*iter));
+		if (!temp.Down.Blocked) temp.Down.Blocked = AreColliding(worldX, worldY + buffer, Size, (*iter));
 	}
 
 	return std::move(temp);
 }
 
-bool PhysicsSystem::AreColliding(float x1, float y1, int size, Pawn * pwn) {
-	// [1]--[2] <-- these are colliding when the distance between them is less than their combined sizes
-	float CollisionDistance = ((size + (pwn->Size)) / 2);
-
-	if ((FindDistance(x1, y1, pwn) -  CollisionDistance) < 0.1f)
-	{
-			return true;
-	}
-
-	return false;
+bool PhysicsSystem::AreColliding(float x1, float y1, float size, Pawn * pwn) {
+	auto worldX = pwn->WorldX;
+	auto worldY = pwn->WorldY;
+	auto Size = pwn->Size;
+	return (
+		abs(x1 - worldX) * 2 <= (size + Size) &&
+		abs(y1 - worldY) * 2 <= (size + Size)
+		);
 }
 
 bool PhysicsSystem::AreColliding(Pawn * one, Pawn * two)

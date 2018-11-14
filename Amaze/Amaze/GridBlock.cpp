@@ -10,17 +10,17 @@ GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
 	_yOffset(yOffset)
 {
 	//Pawn Props
-	WorldX = xOffset + WALL_LENGTH / 2;
-	WorldY = yOffset + WALL_LENGTH / 2;
+	WorldX = xOffset + WALL_LENGTH / 2.0f;
+	WorldY = yOffset + WALL_LENGTH / 2.0f;
 	Size = WALL_LENGTH;
 
 	X = x;
 	Y = y;
-
+	_offset = Size / 2.0f;
 	//left wall stuff
 	_block = std::make_unique<sf::RectangleShape>(sf::Vector2f(GridBlock::WALL_LENGTH, GridBlock::WALL_LENGTH));
 	_block->setFillColor(sf::Color::Red);
-	_block->setPosition(sf::Vector2f(xOffset + X, yOffset + Y));
+	_block->setPosition(sf::Vector2f(WorldX - _offset, WorldY - _offset));
 }
 
 void GridBlock::Render(sf::RenderWindow * window)
