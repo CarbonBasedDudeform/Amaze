@@ -12,7 +12,7 @@ GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
 	//Pawn Props
 	WorldX = xOffset + WALL_LENGTH / 2.0f;
 	WorldY = yOffset + WALL_LENGTH / 2.0f;
-
+	IsBlocking = true;
 	X = x;
 	Y = y;
 #ifdef _DEBUG

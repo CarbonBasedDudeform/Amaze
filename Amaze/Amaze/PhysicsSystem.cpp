@@ -54,6 +54,8 @@ BlockedDirections PhysicsSystem::RayCastCollide(Pawn * from, int distance)
 		for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
 		{
 			if ((*iter) == from) continue;
+			if ((*iter)->IsBlocking == false) continue;
+
 			if (temp.Left.Blocked && temp.Right.Blocked && temp.Up.Blocked && temp.Down.Blocked) return std::move(temp);
 
 			if (!temp.Left.Blocked)
@@ -84,7 +86,7 @@ BlockedDirections PhysicsSystem::RayCastCollide(Pawn * from, int distance)
 
 BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 {
-	static const int buffer = 2;
+	static const int buffer = 5;
 	BlockedDirections temp;
 	auto worldX = pawn->WorldX;
 	auto worldY = pawn->WorldY;
@@ -92,6 +94,7 @@ BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 	for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
 	{
 		if ((*iter) == pawn) continue;
+		if ((*iter)->IsBlocking == false) continue;
 		
 		if (!temp.Left.Blocked) temp.Left.Blocked = AreColliding(worldX - buffer, worldY, Size, (*iter));
 		if (!temp.Right.Blocked) temp.Right.Blocked = AreColliding(worldX + buffer, worldY, Size, (*iter));

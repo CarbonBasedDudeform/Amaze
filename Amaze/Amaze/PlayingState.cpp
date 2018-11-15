@@ -19,8 +19,8 @@ void PlayingState::Init(PlayingStateOptions opts) {
 	//Init code
 	 _maze->GenerateMaze(opts.LevelSize);
 	 auto start = _maze->GetStart();
-	_hero->WorldX = start->WorldX;
-	_hero->WorldY = start->WorldY;
+	 _hero->WorldX = start->WorldX;
+	 _hero->WorldY = start->WorldY;
 
 	//:::::::::::::::IMPORTANT::::::::::::::: HeroController is created here so that the camera can be focused on the hero pawn correctly.
 	//										 aka, herocontroller needs to be created after the pawns WorldX and Y have been set

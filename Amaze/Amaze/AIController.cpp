@@ -23,7 +23,7 @@ AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, Maze * 
 		i++;
 	}
 
-	_speed = 0.02f;
+	_speed = 0.05f;
 }
 
 AIController::~AIController()

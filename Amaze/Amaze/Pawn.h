@@ -18,6 +18,7 @@ public:
 	float Size;
 	sf::Color Colour;
 	sf::Color RenderColour;
+	bool IsBlocking;
 protected:
 	std::shared_ptr<sf::Texture> _texture;
 	std::unique_ptr<sf::Sprite> _sprite;

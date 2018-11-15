@@ -5,6 +5,7 @@
 MenuState::MenuState()
 {
 	_nextState = this;
+#ifdef NDEBUG
 	_texture = std::make_shared<sf::Texture>();
 	_texture->loadFromFile("Textures/menu_bg.png");
 	_sprite = std::make_unique<sf::Sprite>(*_texture);
@@ -12,6 +13,7 @@ MenuState::MenuState()
 	_textureToStart->loadFromFile("Textures/press_to_start.png");
 	_spriteToStart = std::make_unique<sf::Sprite>(*_textureToStart);
 	_spriteToStart->setPosition(100, 400);
+#endif
 }
 
 
@@ -24,8 +26,10 @@ void MenuState::Init(GameStateOptions opts) {
 }
 
 void MenuState::Render(sf::RenderWindow * window) {
+#ifdef NDEBUG
 	window->draw(*_sprite);
 	window->draw(*_spriteToStart);
+#endif
 }
 
 void MenuState::ProcessInput(float delta) {
