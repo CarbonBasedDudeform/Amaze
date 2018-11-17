@@ -181,20 +181,24 @@ void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
 
 bool AIController::MoveLeft(AIPawn * pawn, float timeDelta) {
 	pawn->WorldX -= _speed * timeDelta;
+	pawn->SetRotation(-90);
 	return true;
 }
 
 bool AIController::MoveRight(AIPawn * pawn, float timeDelta) {
 	pawn->WorldX += _speed * timeDelta;
+	pawn->SetRotation(90);
 	return true;
 }
 
 bool AIController::MoveUp(AIPawn * pawn, float timeDelta) {
 	pawn->WorldY -= _speed * timeDelta;
+	pawn->SetRotation(0);
 	return true;
 }
 
 bool AIController::MoveDown(AIPawn * pawn, float timeDelta) {
 	pawn->WorldY += _speed * timeDelta;
+	pawn->SetRotation(180);
 	return true;
 }

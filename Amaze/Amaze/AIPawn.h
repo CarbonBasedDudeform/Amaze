@@ -12,5 +12,6 @@ public:
 	AIPawn();
 	~AIPawn();
 	void Render(sf::RenderWindow *);
+	void SetRotation(float angle);
 };
 

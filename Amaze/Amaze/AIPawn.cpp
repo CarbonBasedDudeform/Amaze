@@ -39,3 +39,8 @@ void AIPawn::Render(sf::RenderWindow * window)
 	window->draw(circle);
 #endif
 }
+
+void AIPawn::SetRotation(float angle)
+{
+	_sprite->setRotation(angle);
+}
