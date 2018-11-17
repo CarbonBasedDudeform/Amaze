@@ -96,6 +96,7 @@
     <ClCompile Include="GridBlock.cpp" />
     <ClCompile Include="HeroController.cpp" />
     <ClCompile Include="HeroPawn.cpp" />
+    <ClCompile Include="Laser.cpp" />
     <ClCompile Include="LevelTransistionState.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Maze.cpp" />
@@ -103,6 +104,7 @@
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PlayingState.cpp" />
+    <ClCompile Include="StateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIController.h" />
@@ -116,12 +118,14 @@
     <ClInclude Include="GridBlock.h" />
     <ClInclude Include="HeroController.h" />
     <ClInclude Include="HeroPawn.h" />
+    <ClInclude Include="Laser.h" />
     <ClInclude Include="LevelTransistionState.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PlayingState.h" />
+    <ClInclude Include="StateManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

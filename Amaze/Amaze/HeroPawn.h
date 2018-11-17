@@ -13,5 +13,6 @@ public:
 	~HeroPawn();
 	void Render(sf::RenderWindow *);
 	void SetRotation(float angle);
+	sf::Vector2f GetPosition();
 };
 

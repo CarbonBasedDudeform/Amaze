@@ -2,6 +2,8 @@
 #include "Controller.h"
 #include "GameProperties.h"
 #include "HeroPawn.h"
+#include "Laser.h"
+#include "PhysicsSystem.h"
 
 #include "SFML\Graphics.hpp"
 
@@ -14,7 +16,7 @@ class HeroController :
 	public Controller
 {
 public:
-	HeroController(HeroPawn*);
+	HeroController(HeroPawn*, PhysicsSystem * physics);
 	~HeroController();
 	sf::View * GetView();
 	void MoveLeft(float timeDelta);
@@ -22,9 +24,13 @@ public:
 	void MoveUp(float timeDelta);
 	void MoveDown(float timeDelta);
 	void Process(BlockedDirections, float timeDelta) override;
+	std::vector<std::unique_ptr<Laser>> Lasers;
 private:
 	std::unique_ptr<sf::View> _view;
 	HeroPawn * _pawn;
 	void UpdateView();
+	float _rotation;
+	sf::Vector2f _direction;
+	PhysicsSystem * _physics;
 };
 

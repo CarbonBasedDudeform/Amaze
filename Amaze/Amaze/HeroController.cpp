@@ -1,6 +1,9 @@
 #include "HeroController.h"
 
-HeroController::HeroController(HeroPawn * pawn) : Controller(), _pawn(pawn)
+HeroController::HeroController(HeroPawn * pawn, PhysicsSystem * physics) : Controller(),
+	_pawn(pawn),
+	_direction(sf::Vector2f(0,-1)),
+	_physics(physics)
 {
 	_view = std::make_unique<sf::View>(sf::Vector2f(_pawn->WorldX, _pawn->WorldY), sf::Vector2f(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT));
 	_speed = 0.1f;
@@ -22,29 +25,48 @@ void HeroController::UpdateView(){
 
 void HeroController::MoveLeft(float timeDelta) {
 	_pawn->WorldX -= _speed * timeDelta;
-	_pawn->SetRotation(-90);
+	_rotation = -90;
+	_pawn->SetRotation(_rotation);
+	_direction.x = -1;
+	_direction.y = 0;
 	UpdateView();
 }
 
 void HeroController::MoveRight(float timeDelta) {
 	_pawn->WorldX += _speed * timeDelta;
-	_pawn->SetRotation(90);
+	_rotation = 90;
+	_pawn->SetRotation(_rotation);
+	_direction.x = 1;
+	_direction.y = 0;
 	UpdateView();
 }
 
 void HeroController::MoveDown(float timeDelta) {
 	_pawn->WorldY += _speed * timeDelta;
-	_pawn->SetRotation(180);
+	_rotation = 180;
+	_pawn->SetRotation(_rotation);
+	_direction.y = 1;
+	_direction.x = 0;
 	UpdateView();
 }
 
 void HeroController::MoveUp(float timeDelta) {
 	_pawn->WorldY -= _speed * timeDelta;
-	_pawn->SetRotation(0);
+	_rotation = 0;
+	_pawn->SetRotation(_rotation);
+	_direction.y = -1;
+	_direction.x = 0;
 	UpdateView();
 }
 
 void HeroController::Process(BlockedDirections blocked, float timeDelta) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+	{
+		auto laser = std::make_unique<Laser>(_pawn->GetPosition(), _direction,_rotation, "Textures/laser.png");
+		_physics->AddCollidable(laser.get());
+		Lasers.push_back(std::move(laser));
+	}
+
 	if (!blocked.Left.Blocked && ( sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A) ) )
 	{
 		MoveLeft(timeDelta);

@@ -24,7 +24,7 @@ void PlayingState::Init(PlayingStateOptions opts) {
 
 	//:::::::::::::::IMPORTANT::::::::::::::: HeroController is created here so that the camera can be focused on the hero pawn correctly.
 	//										 aka, herocontroller needs to be created after the pawns WorldX and Y have been set
-	_heroController = std::make_unique<HeroController>(_hero.get());
+	_heroController = std::make_unique<HeroController>(_hero.get(), _physics.get());
 	for (int i = 0; i < opts.TerrorPopulation; i++) {
 		_terrors->push_back(std::make_unique<AIPawn>());
 	}
@@ -38,6 +38,11 @@ void PlayingState::Render(sf::RenderWindow * window) {
 	//set the camera
 	window->setView(*_heroController->GetView());
 	_maze->Render(window, BUBBLE_SIZE, _hero.get());
+	
+	for (auto iter = _heroController->Lasers.begin(); iter != _heroController->Lasers.end(); iter++) {
+		(*iter)->Render(window);
+	}
+
 	_hero->Render(window);
 
 	
@@ -48,15 +53,22 @@ void PlayingState::Render(sf::RenderWindow * window) {
 }
 
 void PlayingState::ProcessInput(float delta) {
-	bool leftBlocked = false;
-	bool rightBlocked = false;
-	bool topBlocked = false;
-	bool bottomBlocked = false;
-
 	auto blocked = _physics->IsColliding(_hero.get());
 	_heroController->Process(blocked, delta);
-
 	_terrorsController->Process(blocked, delta);
+
+	for (auto iter = _heroController->Lasers.begin(); iter != _heroController->Lasers.end();) {
+		if ((*iter)->IsDead()) {
+			_physics->RemoveCollidable((*iter).get());
+			iter = _heroController->Lasers.erase(iter);
+		}
+		else
+		{
+			auto blocked = _physics->IsColliding((*iter).get());
+			(*iter)->Update(blocked);
+			iter++;
+		}
+	}
 }
 
 GameState * PlayingState::Update()

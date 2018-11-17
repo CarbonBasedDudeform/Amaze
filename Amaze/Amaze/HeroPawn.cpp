@@ -48,3 +48,9 @@ void HeroPawn::SetRotation(float angle)
 	_sprite->setRotation(angle);
 #endif
 }
+
+sf::Vector2f HeroPawn::GetPosition()
+{
+	auto rot = _sprite->getRotation();
+	return sf::Vector2f(WorldX - _offset*cos(rot), WorldY - _offset * sin(rot));
+}
