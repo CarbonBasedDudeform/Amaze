@@ -1,10 +1,10 @@
 #pragma once
 #include "MenuState.h"
-
+#include "StateManager.h"
 
 MenuState::MenuState()
+	: _view(sf::Vector2f(GameProperties::SCREEN_WIDTH / 2, GameProperties::SCREEN_HEIGHT / 2), sf::Vector2f(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT))
 {
-	_nextState = this;
 #ifdef NDEBUG
 	_texture = std::make_shared<sf::Texture>();
 	_texture->loadFromFile("Textures/menu_bg.png");
@@ -27,20 +27,18 @@ void MenuState::Init(GameStateOptions opts) {
 
 void MenuState::Render(sf::RenderWindow * window) {
 #ifdef NDEBUG
+	window->setView(_view);
 	window->draw(*_sprite);
 	window->draw(*_spriteToStart);
 #endif
 }
 
 void MenuState::ProcessInput(float delta) {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		auto options = PlayingStateOptions(INITIAL_MAZE_SIZE, 0);
-		auto state = new PlayingState();
-		state->Init(options);
-		_nextState = state;
-	}
+
 }
 
-GameState * MenuState::Update() {
-	return _nextState;
+void MenuState::Update(StateManager& stateMgr) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		stateMgr.ChangeState(StateManager::Playing);
+	}
 }

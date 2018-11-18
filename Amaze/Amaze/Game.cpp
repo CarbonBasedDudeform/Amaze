@@ -8,14 +8,12 @@ Game::Game()
 {
 	_window = std::make_unique< sf::RenderWindow>(sf::VideoMode(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT), GAME_TITLE, GameProperties::MODE);
 	_window->setFramerateLimit(60);
-	_curGameState = new MenuState();
 	++_count;
 	assert(_count <= 1);
 }  
 
 bool Game::Init()
 {
-	_curGameState->Init(GameStateOptions()); //no options needed for the initial state atm.
 	return true;
 }
 
@@ -32,13 +30,14 @@ void Game::Loop()
 		auto now = _clock.now();
 		std::chrono::duration<float> timeDelta = now - _lastUpdate;
 		float delta = timeDelta.count() * 1000;
-		_curGameState = _curGameState->Update();
+		_curGameState = _stateManager.GetCurrent();
 		//check user input
 		_curGameState->ProcessInput(delta);
 		//render
 		_window->clear();
 		_curGameState->Render(_window.get());
 		_window->display();
+		_curGameState->Update(_stateManager);
 		_lastUpdate = now;
 	}
 }

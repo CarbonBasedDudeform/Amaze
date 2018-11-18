@@ -39,7 +39,7 @@ public:
 	void Init(PlayingStateOptions opts);
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput(float delta) override;
-	GameState * Update() override;
+	void Update(StateManager& stateMgr) override;
 
 
 private:

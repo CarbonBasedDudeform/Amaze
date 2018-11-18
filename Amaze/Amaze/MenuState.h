@@ -15,10 +15,9 @@ public:
 	void Init(GameStateOptions opt) override;
 	void Render(sf::RenderWindow * window) override;
 	void ProcessInput(float delta) override;
-	GameState * Update() override;
+	void Update(StateManager& stateMgr) override;
 private:
-	GameState * _nextState;
-	static const int INITIAL_MAZE_SIZE = 5;
+	sf::View _view;
 	std::shared_ptr<sf::Texture> _texture;
 	std::unique_ptr<sf::Sprite> _sprite;
 	std::shared_ptr<sf::Texture> _textureToStart;

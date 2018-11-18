@@ -1,4 +1,5 @@
 #include "PlayingState.h"
+#include "StateManager.h"
 
 PlayingState::PlayingState()
 {
@@ -89,24 +90,14 @@ void PlayingState::ProcessInput(float delta) {
 	}
 }
 
-#include "MenuState.h"
-GameState * PlayingState::Update()
+void PlayingState::Update(StateManager& stateMgr)
 {
 	if (_physics->AreColliding(_hero.get(), _maze->GetFinish()))
 	{
-		_physics->Reset();
-		auto nextLevel = new PlayingState();
-		auto options = PlayingStateOptions(_maze->GetSize() + 1, _terrors->size() + 1);
-		nextLevel->Init(options);
-		delete this;
-		return nextLevel;
+		stateMgr.ChangeState(StateManager::Playing);
 	}
 
 	if (_hero->Health < 0) {
-		auto nextLevel = new MenuState();
-		delete this;
-		return nextLevel;
+		stateMgr.ChangeState(StateManager::GameOver);
 	}
-
-	return this;
 }

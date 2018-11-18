@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 
-struct GameStateOptions {};
 
+struct GameStateOptions {};
+class StateManager;
 /*
 	Parent Class which all GameStates inherit
 */
@@ -16,5 +17,5 @@ public:
 	virtual void Init(GameStateOptions opts) {}
 	virtual void Render(sf::RenderWindow * window) = 0;
 	virtual void ProcessInput(float delta) = 0;
-	virtual GameState * Update() = 0;
+	virtual void Update(StateManager& stateMgr) = 0;
 };
