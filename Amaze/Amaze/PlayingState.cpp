@@ -43,6 +43,10 @@ void PlayingState::Render(sf::RenderWindow * window) {
 		(*iter)->Render(window);
 	}
 
+	for (auto iter = _terrorsController->Lasers.begin(); iter != _terrorsController->Lasers.end(); iter++) {
+		(*iter)->Render(window);
+	}
+
 	_hero->Render(window);
 
 	
@@ -61,6 +65,19 @@ void PlayingState::ProcessInput(float delta) {
 		if ((*iter)->IsDead()) {
 			_physics->RemoveCollidable((*iter).get());
 			iter = _heroController->Lasers.erase(iter);
+		}
+		else
+		{
+			auto blocked = _physics->IsColliding((*iter).get());
+			(*iter)->Update(blocked);
+			iter++;
+		}
+	}
+
+	for (auto iter = _terrorsController->Lasers.begin(); iter != _terrorsController->Lasers.end();) {
+		if ((*iter)->IsDead()) {
+			_physics->RemoveCollidable((*iter).get());
+			iter = _terrorsController->Lasers.erase(iter);
 		}
 		else
 		{

@@ -44,3 +44,15 @@ void AIPawn::SetRotation(float angle)
 {
 	_sprite->setRotation(angle);
 }
+
+float AIPawn::GetRotation() const
+{
+	return _sprite->getRotation();
+}
+
+
+sf::Vector2f AIPawn::GetPosition()
+{
+	auto rot = _sprite->getRotation();
+	return sf::Vector2f(WorldX - _offset * cos(rot), WorldY - _offset * sin(rot));
+}

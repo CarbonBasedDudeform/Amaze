@@ -13,5 +13,8 @@ public:
 	~AIPawn();
 	void Render(sf::RenderWindow *);
 	void SetRotation(float angle);
+	float GetRotation() const;
+	sf::Vector2f GetPosition();
+	sf::Vector2f Direction;
 };
 

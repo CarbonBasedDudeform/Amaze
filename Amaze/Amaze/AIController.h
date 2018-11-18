@@ -5,6 +5,7 @@
 #include "GridBlock.h"
 #include "Maze.h"
 #include "HeroPawn.h"
+#include "Laser.h"
 
 #include <memory>
 #include <vector>
@@ -26,13 +27,14 @@ struct Belief {
 //or an int representing the number of searches it has done in the past inentions.
 class Intention {
 public:
-	Intention() : Left(false), Right(false), Up(false), Down(false), Searching(0) {};
-	Intention(Intention& intent) : Left(intent.Left), Right(intent.Right), Up(intent.Up), Down(intent.Down), Searching(intent.Searching){};
+	Intention() : Left(false), Right(false), Up(false), Down(false), Searching(0), Shoot(false) {};
+	Intention(Intention& intent) : Left(intent.Left), Right(intent.Right), Up(intent.Up), Down(intent.Down), Searching(intent.Searching), Shoot(intent.Shoot) {};
 	bool Left;
 	bool Right;
 	bool Up;
 	bool Down;
 	int Searching;
+	bool Shoot;
 };
 
 class AIPawnWrapper {
@@ -49,6 +51,7 @@ public:
 	AIController(std::vector<std::unique_ptr<AIPawn>> *, Maze *, PhysicsSystem *,HeroPawn *);
 	~AIController();
 	void Process(BlockedDirections, float timeDelta) override;
+	std::vector<std::unique_ptr<Laser>> Lasers;
 
 private:
 	const int VIEW_DISTANCE = 75;
@@ -72,5 +75,6 @@ private:
 	Intention DecideIntent(AIPawnWrapper * pawn, Intention);
 	Intention Explore(const BlockedDirections& blocked, Intention& previousIntent) const;
 	Intention Investigate(Pawn * pawn, const Intention& previousIntent);
+	Intention ShootToKill();
 };
 

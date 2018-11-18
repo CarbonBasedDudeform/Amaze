@@ -53,7 +53,8 @@ Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousInt
 	if (HeroHasBeenSeen) {
 		_lastLocation.WorldX = _hero->WorldX;
 		_lastLocation.WorldY = _hero->WorldY;
-		return std::move(Investigate(pawn->pawn, previousIntent));
+		return std::move(ShootToKill());
+		//return std::move(Investigate(pawn->pawn, previousIntent));
 	}
 	else if (SearchMore) {
 		_lastLocation = std::move(RandomLocationNear(_lastLocation));
@@ -170,6 +171,13 @@ Intention AIController::Investigate(Pawn * pawn, const Intention& previousIntent
 	return std::move(temp);
 }
 
+Intention AIController::ShootToKill()
+{
+	Intention temp;
+	temp.Shoot = true;
+	return std::move(temp);
+}
+
 float AIController::DistanceToHero(Pawn * pawn, Pawn * hero)
 {
 	float x = hero->WorldX - pawn->WorldX;
@@ -195,6 +203,11 @@ Belief AIController::RandomLocationNear(Belief & lastBelief)
 }
 
 void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
+	if (wrapper->MyIntention.Shoot) {
+		auto laser = std::make_unique<Laser>(wrapper->pawn->GetPosition(), wrapper->pawn->Direction, wrapper->pawn->GetRotation(), "Textures/enemyLaser.png");
+		_physics->AddCollidable(laser.get());
+		Lasers.push_back(std::move(laser));
+	}
 	if (wrapper->MyIntention.Left) MoveLeft(wrapper->pawn, timeDelta);
 	if (wrapper->MyIntention.Right) MoveRight(wrapper->pawn, timeDelta);
 	if (wrapper->MyIntention.Up) MoveUp(wrapper->pawn, timeDelta);
@@ -204,23 +217,31 @@ void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
 bool AIController::MoveLeft(AIPawn * pawn, float timeDelta) {
 	pawn->WorldX -= _speed * timeDelta;
 	pawn->SetRotation(-90);
+	pawn->Direction.x = -1;
+	pawn->Direction.y = 0;
 	return true;
 }
 
 bool AIController::MoveRight(AIPawn * pawn, float timeDelta) {
 	pawn->WorldX += _speed * timeDelta;
 	pawn->SetRotation(90);
+	pawn->Direction.x = 1;
+	pawn->Direction.y = 0;
 	return true;
 }
 
 bool AIController::MoveUp(AIPawn * pawn, float timeDelta) {
 	pawn->WorldY -= _speed * timeDelta;
 	pawn->SetRotation(0);
+	pawn->Direction.x = 0;
+	pawn->Direction.y = -1;
 	return true;
 }
 
 bool AIController::MoveDown(AIPawn * pawn, float timeDelta) {
 	pawn->WorldY += _speed * timeDelta;
 	pawn->SetRotation(180);
+	pawn->Direction.x = 0;
+	pawn->Direction.y = 1;
 	return true;
 }
