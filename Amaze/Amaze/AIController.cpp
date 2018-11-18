@@ -216,6 +216,7 @@ void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
 		dir.y /= dist;
 
 		auto laser = std::make_unique<Laser>(wrapper->pawn->GetPosition(), dir, atan2(dir.y, dir.x) * 180 / 3.14f, "Textures/enemyLaser.png");
+		laser->parent = wrapper->pawn;
 		_physics->AddCollidable(laser.get());
 		Lasers.push_back(std::move(laser));
 	}

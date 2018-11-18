@@ -13,6 +13,9 @@ Laser::Laser(const sf::Vector2f& origin, const sf::Vector2f& dir, float rotation
 	WorldX = origin.x;
 	WorldY = origin.y;
 	Size = 10;
+	TakesDamage = false;
+	DoesDamage = true;
+	DamageAmount = 1;
 }
 
 void Laser::Render(sf::RenderWindow * window)

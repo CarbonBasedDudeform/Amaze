@@ -20,6 +20,8 @@ HeroPawn::HeroPawn()
 #endif
 	WorldX = -_offset;
 	WorldY = -_offset;
+	TakesDamage = true;
+	Health = 0;
 }
 
 

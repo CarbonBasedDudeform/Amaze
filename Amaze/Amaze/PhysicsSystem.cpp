@@ -94,6 +94,10 @@ BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 	for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
 	{
 		if ((*iter) == pawn) continue;
+		if ((*iter)->DoesDamage && pawn->TakesDamage && (*iter)->parent != pawn) {
+			pawn->DoDamage((*iter)->DamageAmount);
+		}
+
 		if ((*iter)->IsBlocking == false) continue;
 		
 		if (!temp.Left.Blocked) temp.Left.Blocked = AreColliding(worldX - buffer, worldY, Size, (*iter));

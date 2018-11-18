@@ -19,6 +19,12 @@ public:
 	sf::Color Colour;
 	sf::Color RenderColour;
 	bool IsBlocking;
+	bool TakesDamage;
+	bool DoesDamage;
+	float DamageAmount;
+	void DoDamage(float amount);
+	float Health;
+	Pawn * parent;
 protected:
 	std::shared_ptr<sf::Texture> _texture;
 	std::unique_ptr<sf::Sprite> _sprite;

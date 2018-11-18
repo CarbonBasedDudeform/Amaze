@@ -88,6 +88,7 @@ void PlayingState::ProcessInput(float delta) {
 	}
 }
 
+#include "MenuState.h"
 GameState * PlayingState::Update()
 {
 	if (_physics->AreColliding(_hero.get(), _maze->GetFinish()))
@@ -96,6 +97,12 @@ GameState * PlayingState::Update()
 		auto nextLevel = new PlayingState();
 		auto options = PlayingStateOptions(_maze->GetSize() + 1, _terrors->size() + 1);
 		nextLevel->Init(options);
+		delete this;
+		return nextLevel;
+	}
+
+	if (_hero->Health < 0) {
+		auto nextLevel = new MenuState();
 		delete this;
 		return nextLevel;
 	}

@@ -5,6 +5,8 @@ AIPawn::AIPawn()
 {
 	WorldX = 0;
 	WorldY = 0;
+	TakesDamage = true;
+	Health = 100;
 	//if not debug use the texture, this is to address the issue #18 : https://github.com/CarbonBasedDudeform/Amaze/issues/18
 #ifdef NDEBUG
 	_texture = std::make_shared<sf::Texture>();

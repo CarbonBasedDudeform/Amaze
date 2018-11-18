@@ -63,6 +63,7 @@ void HeroController::Process(BlockedDirections blocked, float timeDelta) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
 	{
 		auto laser = std::make_unique<Laser>(_pawn->GetPosition(), _direction,_rotation, "Textures/laser.png");
+		laser->parent = _pawn;
 		_physics->AddCollidable(laser.get());
 		Lasers.push_back(std::move(laser));
 	}
