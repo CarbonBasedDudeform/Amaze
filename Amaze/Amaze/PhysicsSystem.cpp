@@ -91,19 +91,29 @@ BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 	auto worldX = pawn->WorldX;
 	auto worldY = pawn->WorldY;
 	auto Size = pawn->Size;
-	for (auto iter = _collidables->begin(); iter != _collidables->end(); iter++)
+	for (auto iter = _collidables->begin(); iter != _collidables->end(); )
 	{
-		if ((*iter) == pawn) continue;
-		if ((*iter)->DoesDamage && pawn->TakesDamage && (*iter)->parent != pawn) {
-			pawn->DoDamage((*iter)->DamageAmount);
+		if ((*iter) == pawn) {
+			iter++;
+			continue;
 		}
 
-		if ((*iter)->IsBlocking == false) continue;
+		if ((*iter)->DoesDamage && pawn->TakesDamage && (*iter)->parent != pawn) {
+			pawn->DoDamage((*iter)->DamageAmount);
+			iter = _collidables->erase(iter);
+			continue;
+		}
+
+		if ((*iter)->IsBlocking == false) {
+			iter++;
+			continue;
+		}
 		
 		if (!temp.Left.Blocked) temp.Left.Blocked = AreColliding(worldX - buffer, worldY, Size, (*iter));
 		if (!temp.Right.Blocked) temp.Right.Blocked = AreColliding(worldX + buffer, worldY, Size, (*iter));
 		if (!temp.Up.Blocked) temp.Up.Blocked = AreColliding(worldX, worldY - buffer, Size, (*iter));
 		if (!temp.Down.Blocked) temp.Down.Blocked = AreColliding(worldX, worldY + buffer, Size, (*iter));
+		iter++;
 	}
 
 	return std::move(temp);
