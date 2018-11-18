@@ -50,11 +50,17 @@ Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousInt
 	auto dist = DistanceToHero(pawn->pawn, _hero);
 	const bool HeroHasBeenSeen = dist < VIEW_DISTANCE;
 	const bool SearchMore = previousIntent.Searching > 0 && previousIntent.Searching <= 5;
+	const bool CloseToHero = dist < 40;
 	if (HeroHasBeenSeen) {
+		if (CloseToHero) {
+			return std::move(ShootToKill());
+		}
+
 		_lastLocation.WorldX = _hero->WorldX;
 		_lastLocation.WorldY = _hero->WorldY;
-		return std::move(ShootToKill());
-		//return std::move(Investigate(pawn->pawn, previousIntent));
+		auto intent = Investigate(pawn->pawn, previousIntent);
+		intent.Shoot = true;
+		return std::move(intent);
 	}
 	else if (SearchMore) {
 		_lastLocation = std::move(RandomLocationNear(_lastLocation));
@@ -204,7 +210,12 @@ Belief AIController::RandomLocationNear(Belief & lastBelief)
 
 void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
 	if (wrapper->MyIntention.Shoot) {
-		auto laser = std::make_unique<Laser>(wrapper->pawn->GetPosition(), wrapper->pawn->Direction, wrapper->pawn->GetRotation(), "Textures/enemyLaser.png");
+		sf::Vector2f dir(_lastLocation.WorldX - wrapper->pawn->WorldX,_lastLocation.WorldY - wrapper->pawn->WorldY);
+		auto dist = DistanceToLocation(wrapper->pawn, _lastLocation);
+		dir.x /= dist;
+		dir.y /= dist;
+
+		auto laser = std::make_unique<Laser>(wrapper->pawn->GetPosition(), dir, atan2(dir.y, dir.x) * 180 / 3.14f, "Textures/enemyLaser.png");
 		_physics->AddCollidable(laser.get());
 		Lasers.push_back(std::move(laser));
 	}
