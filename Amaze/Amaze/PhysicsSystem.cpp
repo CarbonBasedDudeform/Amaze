@@ -97,8 +97,8 @@ BlockedDirections PhysicsSystem::IsColliding(Pawn * pawn)
 			iter++;
 			continue;
 		}
-
-		if ((*iter)->DoesDamage && pawn->TakesDamage && (*iter)->parent != pawn) {
+		
+		if ((*iter)->DoesDamage && pawn->TakesDamage && (*iter)->parent != pawn  && AreColliding(worldX, worldY, Size, (*iter))) {
 			pawn->DoDamage((*iter)->DamageAmount);
 			iter = _collidables->erase(iter);
 			continue;

@@ -36,12 +36,19 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 		//decide intent
 			//move according to the intent
 	if (_pawns->size() < 0) return;
-
-	for (auto iter = _pawns->begin(); iter != _pawns->end(); iter++)
+	
+	for (auto iter = _pawns->begin(); iter != _pawns->end();)
 	{
-		(*iter)->MyIntention = std::move(DecideIntent((*iter).get(), (*iter)->MyIntention));
-		//and move
-		MoveIntoSpace((*iter).get(), timeDelta);
+		_physics->IsColliding((*iter)->pawn);
+		if ((*iter)->pawn->Health < 0) {
+			iter = _pawns->erase(iter);
+		}
+		else {
+			(*iter)->MyIntention = std::move(DecideIntent((*iter).get(), (*iter)->MyIntention));
+			//and move
+			MoveIntoSpace((*iter).get(), timeDelta);
+			iter++;
+		}
 	}
 }
 

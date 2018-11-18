@@ -52,7 +52,8 @@ void PlayingState::Render(sf::RenderWindow * window) {
 	
 	for (auto iter = _terrors->begin(); iter != _terrors->end(); iter++)
 	{
-		(*iter)->Render(window);
+		if ((*iter)->Health > 0)
+			(*iter)->Render(window);
 	}
 }
 
