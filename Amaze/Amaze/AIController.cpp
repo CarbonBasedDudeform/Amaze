@@ -39,7 +39,7 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 
 	for (auto iter = _pawns->begin(); iter != _pawns->end(); iter++)
 	{
-		(*iter)->MyIntention = DecideIntent((*iter).get(), (*iter)->MyIntention);
+		(*iter)->MyIntention = std::move(DecideIntent((*iter).get(), (*iter)->MyIntention));
 		//and move
 		MoveIntoSpace((*iter).get(), timeDelta);
 	}
@@ -79,46 +79,68 @@ Intention AIController::Explore(const BlockedDirections& blocked, Intention& pre
 	int rand = std::rand() % 100 - std::rand() % 100;
 	int intentedDirections = 0;
 	if (rand < 0) {
-		if (blocked.Up.Distance >= blocked.Down.Distance && blocked.Up.Distance >= blocked.Left.Distance && blocked.Up.Distance >= blocked.Right.Distance) {
+		if (!blocked.Up.Blocked && blocked.Up.Distance >= blocked.Down.Distance && blocked.Up.Distance >= blocked.Left.Distance && blocked.Up.Distance >= blocked.Right.Distance) {
 			intent.Up = true;
 			intentedDirections++;
 		}
-		else if (blocked.Down.Distance >= blocked.Up.Distance && blocked.Down.Distance >= blocked.Left.Distance && blocked.Down.Distance >= blocked.Right.Distance) {
+		else if (!blocked.Down.Blocked && blocked.Down.Distance >= blocked.Up.Distance && blocked.Down.Distance >= blocked.Left.Distance && blocked.Down.Distance >= blocked.Right.Distance) {
 			intent.Down = true;
 			intentedDirections++;
 		}
-		else if (blocked.Left.Distance >= blocked.Down.Distance && blocked.Left.Distance >= blocked.Up.Distance && blocked.Left.Distance >= blocked.Right.Distance) {
+		else if (!blocked.Left.Blocked && blocked.Left.Distance >= blocked.Down.Distance && blocked.Left.Distance >= blocked.Up.Distance && blocked.Left.Distance >= blocked.Right.Distance) {
 			intent.Left = true;
 			intentedDirections++;
 		}
-		else if (blocked.Right.Distance >= blocked.Up.Distance && blocked.Right.Distance >= blocked.Left.Distance && blocked.Right.Distance >= blocked.Down.Distance) {
+		else if (!blocked.Right.Blocked && blocked.Right.Distance >= blocked.Up.Distance && blocked.Right.Distance >= blocked.Left.Distance && blocked.Right.Distance >= blocked.Down.Distance) {
 			intent.Right = true;
 			intentedDirections++;
 		}
 	}
 	else
 	{
-		if (blocked.Left.Distance >= blocked.Down.Distance && blocked.Left.Distance >= blocked.Up.Distance && blocked.Left.Distance >= blocked.Right.Distance) {
+		if (!blocked.Left.Blocked && blocked.Left.Distance >= blocked.Down.Distance && blocked.Left.Distance >= blocked.Up.Distance && blocked.Left.Distance >= blocked.Right.Distance) {
 			intent.Left = true;
 			intentedDirections++;
 		}
-		else if (blocked.Right.Distance >= blocked.Up.Distance && blocked.Right.Distance >= blocked.Left.Distance && blocked.Right.Distance >= blocked.Down.Distance) {
+		else if (!blocked.Right.Blocked && blocked.Right.Distance >= blocked.Up.Distance && blocked.Right.Distance >= blocked.Left.Distance && blocked.Right.Distance >= blocked.Down.Distance) {
 			intent.Right = true;
 			intentedDirections++;
 		}
-		else if (blocked.Up.Distance >= blocked.Down.Distance && blocked.Up.Distance >= blocked.Left.Distance && blocked.Up.Distance >= blocked.Right.Distance) {
+		else if (!blocked.Up.Blocked && blocked.Up.Distance >= blocked.Down.Distance && blocked.Up.Distance >= blocked.Left.Distance && blocked.Up.Distance >= blocked.Right.Distance) {
 			intent.Up = true;
 			intentedDirections++;
 		}
-		else if (blocked.Down.Distance >= blocked.Up.Distance && blocked.Down.Distance >= blocked.Left.Distance && blocked.Down.Distance >= blocked.Right.Distance) {
+		else if (!blocked.Down.Blocked && blocked.Down.Distance >= blocked.Up.Distance && blocked.Down.Distance >= blocked.Left.Distance && blocked.Down.Distance >= blocked.Right.Distance) {
 			intent.Down = true;
 			intentedDirections++;
 		}
 	}
 
 	if (intentedDirections == 0 || intentedDirections > 1) {
+		enum DIR { UP, DOWN, LEFT, RIGHT };
+		std::vector<DIR> PossibleDirections;
+		auto isZero = intentedDirections == 0;
+		if (intent.Up || isZero) {
+			PossibleDirections.push_back(DIR::UP);
+		}
+		if (intent.Down || isZero) {
+			PossibleDirections.push_back(DIR::DOWN);
+		}
+		if (intent.Left || isZero) {
+			PossibleDirections.push_back(DIR::LEFT);
+		}
+		if (intent.Right || isZero) {
+			PossibleDirections.push_back(DIR::RIGHT);
+		}
+
+		auto cap = PossibleDirections.size();
+		auto r = std::rand() % cap;
+		auto result = PossibleDirections.at(r);
 		intent.Up = intent.Down = intent.Left = intent.Right = false;
-		intent.Up = true;
+		if (result == DIR::UP) intent.Up = true;
+		if (result == DIR::DOWN) intent.Down = true;
+		if (result == DIR::LEFT) intent.Left = true;
+		if (result == DIR::RIGHT) intent.Right = true;
 	}
 
 	return std::move(intent);
