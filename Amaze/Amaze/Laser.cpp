@@ -10,6 +10,7 @@ Laser::Laser(const sf::Vector2f& origin, const sf::Vector2f& dir, float rotation
 	_texture->loadFromFile(texture);
 	_sprite = std::make_unique<sf::Sprite>(*_texture);
 	_sprite->setRotation(rotation);
+
 	WorldX = origin.x;
 	WorldY = origin.y;
 	Size = 1;
