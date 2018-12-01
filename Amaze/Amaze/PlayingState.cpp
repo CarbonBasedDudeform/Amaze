@@ -95,9 +95,9 @@ void PlayingState::Update(StateManager& stateMgr)
 	if (_physics->AreColliding(_hero.get(), _maze->GetFinish()))
 	{
 		stateMgr.ChangeState(StateManager::Playing);
-	}
-
-	if (_hero->Health < 0) {
+	} 
+	else if (_hero->Health < 0) 
+	{
 		stateMgr.ChangeState(StateManager::GameOver);
 	}
 }
