@@ -16,7 +16,7 @@ struct GridLocation {
 class GridBlock : public Pawn
 {
 public:
-	static const int WALL_LENGTH = ((float)GameProperties::SCREEN_WIDTH / (float)GameProperties::SCREEN_HEIGHT) *50;
+	static const int WALL_LENGTH = 66;//((float)GameProperties::SCREEN_WIDTH / (float)GameProperties::SCREEN_HEIGHT) *50;
 
 	GridBlock(int,int,int,int);
 	int X;

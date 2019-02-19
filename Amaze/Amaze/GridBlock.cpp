@@ -17,10 +17,14 @@ GridBlock::GridBlock(int x, int y, int xOffset, int yOffset)
 	Y = y;
 	_texture = std::make_shared<sf::Texture>();
 	_texture->loadFromFile("Textures/brick.png");
-	Size = _texture->getSize().x;
+	sf::Vector2f scale(GameProperties::SCREEN_WIDTH / 800.0f, GameProperties::SCREEN_HEIGHT / (float)600.0f);
+	Size = _texture->getSize().x * scale.x;
 	_offset = Size / 2.0f;
+	
 	_sprite = std::make_unique<sf::Sprite>(*_texture);
 	_sprite->setOrigin(_offset, _offset);
+	
+	_sprite->setScale(scale);
 }
 
 void GridBlock::Render(sf::RenderWindow * window)

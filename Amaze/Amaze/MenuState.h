@@ -18,7 +18,8 @@ public:
 	void Update(StateManager& stateMgr) override;
 private:
 	sf::View _view;
-	std::shared_ptr<sf::Texture> _texture;
+	std::vector<std::unique_ptr<sf::Texture>> _texture;
+	int counter;
 	std::unique_ptr<sf::Sprite> _sprite;
 	std::shared_ptr<sf::Texture> _textureToStart;
 	std::unique_ptr<sf::Sprite> _spriteToStart;

@@ -17,12 +17,12 @@ void Maze::GenerateMaze(int size) {
 	_size = size; //private member other functions can access for the maze size, saves passing in repeatedly as an argument
 	//our return list containing all the walls
 	if (_maze == nullptr) _maze = std::make_unique<std::vector<std::unique_ptr<GridBlock>>>();
-
+	sf::Vector2f scale(GameProperties::SCREEN_WIDTH / 800.0f, GameProperties::SCREEN_HEIGHT / (float)600.0f);
 	//populate
 	for (int i = 0; i < size; ++i) {
 		for (int j = 0; j < size; ++j) {
 			if (i * j <= _maze->size()) {
-				auto gridBlock = std::make_unique<GridBlock>(j, i, (GridBlock::WALL_LENGTH)*j, GridBlock::WALL_LENGTH*i);
+				auto gridBlock = std::make_unique<GridBlock>(j, i, (GridBlock::WALL_LENGTH*scale.x)*j, (GridBlock::WALL_LENGTH*scale.y)*i);
 				gridBlock->Colour = sf::Color(255, 0, 0);
 				gridBlock->RenderColour = gridBlock->Colour;
 				_maze->push_back(std::move(gridBlock));
