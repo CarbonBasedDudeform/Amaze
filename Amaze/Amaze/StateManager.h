@@ -12,6 +12,7 @@ public:
 	void ChangeState(States state);
 private:
 	int _size;
+	int score;
 	std::unique_ptr<GameState> _curState;
 
 };

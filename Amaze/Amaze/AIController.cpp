@@ -1,6 +1,7 @@
 #include "AIController.h"
 
 AIController::AIController(std::vector<std::unique_ptr<AIPawn>> * pawns, Maze * maze, PhysicsSystem * physics, HeroPawn * hero)
+	: accumulatedTime(0)
 {
 	_physics = physics;
 	_hero = hero;
@@ -36,6 +37,8 @@ void AIController::Process(BlockedDirections blocked, float timeDelta) {
 		//decide intent
 			//move according to the intent
 	if (_pawns->size() < 0) return;
+
+	accumulatedTime += timeDelta;
 	
 	for (auto iter = _pawns->begin(); iter != _pawns->end();)
 	{
@@ -58,7 +61,10 @@ Intention AIController::DecideIntent(AIPawnWrapper * pawn, Intention previousInt
 	const bool HeroHasBeenSeen = dist < VIEW_DISTANCE;
 	const bool SearchMore = previousIntent.Searching > 0 && previousIntent.Searching <= 5;
 	const bool CloseToHero = dist < 40;
-	if (HeroHasBeenSeen) {
+	const bool ShootCooldown = accumulatedTime > 125.0f;
+	if (ShootCooldown && HeroHasBeenSeen) {
+		accumulatedTime = 0;
+
 		if (CloseToHero) {
 			return std::move(ShootToKill());
 		}
@@ -217,6 +223,7 @@ Belief AIController::RandomLocationNear(Belief & lastBelief)
 
 void AIController::MoveIntoSpace(AIPawnWrapper * wrapper, float timeDelta) {
 	if (wrapper->MyIntention.Shoot) {
+		wrapper->MyIntention.Shoot = false;
 		sf::Vector2f dir(_lastLocation.WorldX - wrapper->pawn->WorldX,_lastLocation.WorldY - wrapper->pawn->WorldY);
 		auto dist = DistanceToLocation(wrapper->pawn, _lastLocation);
 		dir.x /= dist;

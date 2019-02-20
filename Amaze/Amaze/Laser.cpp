@@ -4,7 +4,7 @@
 
 Laser::Laser(const sf::Vector2f& origin, const sf::Vector2f& dir, float rotation, const std::string& texture) :
 	_dir(dir),
-	_energy(10.0f, 10.0f)
+	_energy(20.0f, 20.0f)
 {
 	_texture = std::make_unique<sf::Texture>();
 	_texture->loadFromFile(texture);
@@ -16,7 +16,7 @@ Laser::Laser(const sf::Vector2f& origin, const sf::Vector2f& dir, float rotation
 	Size = 1;
 	TakesDamage = false;
 	DoesDamage = true;
-	DamageAmount = 1;
+	DamageAmount = 5;
 }
 
 void Laser::Render(sf::RenderWindow * window)

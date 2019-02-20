@@ -32,5 +32,6 @@ private:
 	float _rotation;
 	sf::Vector2f _direction;
 	PhysicsSystem * _physics;
+	float accumulatedTime;
 };
 

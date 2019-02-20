@@ -56,6 +56,7 @@ public:
 private:
 	const int VIEW_DISTANCE = 75;
 	const int BLOCKING_DISTANCE = 25;
+	float accumulatedTime;
 	std::unique_ptr<std::vector<std::unique_ptr<AIPawnWrapper>>> _pawns;
 	
 	void MoveIntoSpace(AIPawnWrapper *, float timeDelta);

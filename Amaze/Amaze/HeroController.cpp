@@ -3,7 +3,8 @@
 HeroController::HeroController(HeroPawn * pawn, PhysicsSystem * physics) : Controller(),
 	_pawn(pawn),
 	_direction(sf::Vector2f(0,-1)),
-	_physics(physics)
+	_physics(physics),
+	accumulatedTime(0)
 {
 	_view = std::make_unique<sf::View>(sf::Vector2f(_pawn->WorldX, _pawn->WorldY), sf::Vector2f(GameProperties::SCREEN_WIDTH, GameProperties::SCREEN_HEIGHT));
 	_speed = 0.1f;
@@ -60,9 +61,12 @@ void HeroController::MoveUp(float timeDelta) {
 }
 
 void HeroController::Process(BlockedDirections blocked, float timeDelta) {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+	accumulatedTime += timeDelta;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && accumulatedTime > 250.0f)
 	{
+		accumulatedTime = 0;
 		auto laser = std::make_unique<Laser>(_pawn->GetPosition(), _direction,_rotation, "Textures/laser.png");
+		laser->DamageAmount *= 2;
 		laser->parent = _pawn;
 		_physics->AddCollidable(laser.get());
 		Lasers.push_back(std::move(laser));
