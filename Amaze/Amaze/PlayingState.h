@@ -52,6 +52,10 @@ private:
 	//The Terrors (The T errors)
 	std::unique_ptr<std::vector<std::unique_ptr<AIPawn>>> _terrors;
 	std::unique_ptr<AIController> _terrorsController;
+	sf::Sprite healthOutline;
+	sf::Texture healthOutlineTexture;
+	sf::Sprite health;
+	sf::Texture healthTexture;
 
 	static const float BUBBLE_SIZE;
 };

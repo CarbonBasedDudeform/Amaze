@@ -9,6 +9,10 @@ PlayingState::PlayingState()
 	_physics = std::make_unique<PhysicsSystem>();
 	_maze = std::make_unique<Maze>(_physics.get());
 	_terrors = std::make_unique<std::vector<std::unique_ptr<AIPawn>>>();
+	healthOutlineTexture.loadFromFile("Textures/healthbar_outline.png");
+	healthOutline.setTexture(healthOutlineTexture);
+	healthTexture.loadFromFile("Textures/healthbar.png");
+	health.setTexture(healthTexture);
 }
 
 
@@ -56,13 +60,19 @@ void PlayingState::Render(sf::RenderWindow * window) {
 		if ((*iter)->Health > 0)
 			(*iter)->Render(window);
 	}
+
+	window->setView(window->getDefaultView());	
+	
+	window->draw(healthOutline);
+	window->draw(health);
 }
 
 void PlayingState::ProcessInput(float delta) {
 	auto blocked = _physics->IsColliding(_hero.get());
 	_heroController->Process(blocked, delta);
 	_terrorsController->Process(blocked, delta);
-
+	float healthScale = _hero->Health > 10 ?_hero->Health / 100.0f : 0;
+	health.setScale(healthScale, 1.0f);
 	for (auto iter = _heroController->Lasers.begin(); iter != _heroController->Lasers.end();) {
 		if ((*iter)->IsDead()) {
 			_physics->RemoveCollidable((*iter).get());
