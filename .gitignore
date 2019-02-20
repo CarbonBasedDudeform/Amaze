@@ -45,6 +45,7 @@ Temporary Items
 Amaze\.vs\*
 Amaze/.vs/Amaze/v15/*
 Amaze/Package/*
+*.zip
 *.obj
 *.log
 *.obj
