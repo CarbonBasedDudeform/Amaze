@@ -4,6 +4,7 @@
 class StateManager
 {
 public:
+	static const int START_SIZE = 10;
 	enum States { Menu, Playing, NextLevel, GameOver};
 	StateManager();
 	~StateManager();

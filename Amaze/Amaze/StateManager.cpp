@@ -3,7 +3,7 @@
 
 
 StateManager::StateManager()
-	: _size(10)
+	: _size(START_SIZE)
 {
 	_curState = std::make_unique<MenuState>();
 }
@@ -23,6 +23,7 @@ void StateManager::ChangeState(States state)
 	switch (state)
 	{
 	case Menu:
+		_size = START_SIZE;
 		_curState = std::make_unique<MenuState>();
 		break;
 	case Playing:
@@ -31,6 +32,13 @@ void StateManager::ChangeState(States state)
 		auto playingSt = std::make_unique<PlayingState>();
 		playingSt->Init(options);
 		_curState = std::move(playingSt);
+		break;
+	}
+	case GameOver:
+	{
+		auto gameOverSt = std::make_unique<GameOverState>();
+		gameOverSt->SetScore(_size * 100);
+		_curState = std::move(gameOverSt);
 		break;
 	}
 	default:
